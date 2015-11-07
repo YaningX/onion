@@ -8,6 +8,10 @@
     <groupId>org.onion</groupId>
     <artifactId>onion</artifactId>
     <version>0.9.0-SNAPSHOT</version>
+    <modules>
+        <module>dist</module>
+        <module>common</module>
+    </modules>
     <packaging>pom</packaging>
     <name>YOnion Parent</name>
     <description>Parent POM of YOnion project: an Erasure Code Based Distributed Storage System</description>

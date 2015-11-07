@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>org.onion</groupId>
+    <artifactId>onion</artifactId>
+    <version>0.9.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>YOnion Parent</name>
+    <description>Parent POM of YOnion project: an Erasure Code Based Distributed Storage System</description>
+    <url>https://github.com/YaningX/YOnion</url>
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>https://github.com/YaningX/YOnion/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>yaning</id>
+            <name>Yaning Xu</name>
+            <email>yaning0123@gmail.com</email>
+            <url>http://www.cs.berkeley.edu/~haoyuan</url>
+            <organization>Shanghai Jiao Tong University Computer Science</organization>
+            <organizationUrl>http://www.cs.sjtu.edu.cn</organizationUrl>
+        </developer>
+    </developers>
+
+</project>

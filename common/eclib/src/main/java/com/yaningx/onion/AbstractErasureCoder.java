@@ -21,6 +21,16 @@ package com.yaningx.onion;
  * Abstract class to implement ErasureCoder.
  */
 public class AbstractErasureCoder implements ErasureCoder {
+    private int dataBlockNum;
+    private int parityBlockNum;
+    private int wordSize;
+
+    public AbstractErasureCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+        this.dataBlockNum = dataBlockNum;
+        this.parityBlockNum = parityBlockNum;
+        this.wordSize = wordSize;
+    }
+
 
     /** {@inheritDoc} */
     public byte[][] encode(byte[][] data) {

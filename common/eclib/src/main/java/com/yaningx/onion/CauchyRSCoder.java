@@ -18,7 +18,10 @@
 package com.yaningx.onion;
 
 /**
- * Cauchy Reed Solomon Code implementation.
+ * A Cauchy Reed Solomon Code implementation.
  */
 public class CauchyRSCoder extends AbstractErasureCoder {
+    public CauchyRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+        super(dataBlockNum, parityBlockNum, wordSize);
+    }
 }

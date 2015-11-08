@@ -20,5 +20,9 @@ package com.yaningx.onion;
 /**
  * A vandermonde Reed Solomon code implementation.
  */
-public class VandermondeRSCoder {
+public class VandermondeRSCoder extends AbstractErasureCoder {
+
+    public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+        super(dataBlockNum, parityBlockNum, wordSize);
+    }
 }

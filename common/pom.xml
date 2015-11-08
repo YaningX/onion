@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>eclib</module>
+        <module>master</module>
         <module>network</module>
         <module>security</module>
         <module>worker</module>

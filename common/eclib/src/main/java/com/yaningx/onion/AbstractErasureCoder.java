@@ -17,6 +17,8 @@
  */
 package com.yaningx.onion;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Abstract class to implement ErasureCoder.
  */
@@ -26,6 +28,9 @@ public class AbstractErasureCoder implements ErasureCoder {
     private int wordSize;
 
     public AbstractErasureCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+        Preconditions.checkArgument(dataBlockNum > 0);
+        Preconditions.checkArgument(parityBlockNum > 0);
+        //TODO judege wordsize is valiable
         this.dataBlockNum = dataBlockNum;
         this.parityBlockNum = parityBlockNum;
         this.wordSize = wordSize;

@@ -17,6 +17,8 @@
  */
 package com.yaningx.onion;
 
+import com.sun.jna.Pointer;
+
 /**
  * A vandermonde Reed Solomon code implementation.
  */
@@ -24,5 +26,15 @@ public class VandermondeRSCoder extends AbstractErasureCoder {
 
     public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
+    }
+
+    @Override
+    protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer, int dataBlockNum, int parityBlockNum, int wordSize) {
+
+    }
+
+    @Override
+    protected void doDecode() {
+
     }
 }

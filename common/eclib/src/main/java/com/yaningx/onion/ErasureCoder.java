@@ -18,6 +18,13 @@
 package com.yaningx.onion;
 
 /**
+ * To understand the codebase, it's better to read the manual of Jerasure.
+ * There are three methods to implement coding and decoding operations:
+ *      1) Matrix-Based Coding;
+ *      2) Bit-Matrix Coding;
+ *      3) Using a schedule rather than a bit-matrix
+ * There are some important parameters: k, m, w (different implementations in the above three methods), packetsize, blocksize. The detailed description is in the manual of Jerasure.
+ *
  * In an ErasureCoder interface, there are three operations:
  *      1) encode();
  *      2) decode();

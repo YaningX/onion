@@ -23,6 +23,7 @@ package com.yaningx.onion;
  *      1) Matrix-Based Coding;
  *      2) Bit-Matrix Coding;
  *      3) Using a schedule rather than a bit-matrix
+ *
  * There are some important parameters: k, m, w (different implementations in the above three methods), packetsize, blocksize. The detailed description is in the manual of Jerasure.
  *
  * In an ErasureCoder interface, there are three operations:

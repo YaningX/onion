@@ -26,15 +26,12 @@ import com.sun.jna.Pointer;
 public abstract class AbstractErasureCoder implements ErasureCoder {
     private int dataBlockNum;
     private int parityBlockNum;
-    private int wordSize;
 
     public AbstractErasureCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
         Preconditions.checkArgument(dataBlockNum > 0);
         Preconditions.checkArgument(parityBlockNum > 0);
-        //TODO judege wordsize is valiable
         this.dataBlockNum = dataBlockNum;
         this.parityBlockNum = parityBlockNum;
-        this.wordSize = wordSize;
     }
 
 
@@ -42,8 +39,8 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
      * There are several coding techniques, and this method is to be implemented by subclass
      */
     protected abstract void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
-                                  int dataBlockNum, int parityBlockNum, int wordSize);
-
+                                  int dataBlockNum, int parityBlockNum);
+    
     /** {@inheritDoc} */
     public byte[][] encode(byte[][] data) {
         Preconditions.checkArgument(data.length > 0);
@@ -51,7 +48,7 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
         int size = data[0].length;
         byte[][] parity = new byte[parityBlockNum][size];
         Pointer[] parityPointer = ECUtils.toPointerArray(parity);
-        doEncode(dataPointer, parityPointer, dataBlockNum, parityBlockNum, wordSize);
+        doEncode(dataPointer, parityPointer, dataBlockNum, parityBlockNum);
         ECUtils.toByteArray(parityPointer, parity);
         return parity;
     }

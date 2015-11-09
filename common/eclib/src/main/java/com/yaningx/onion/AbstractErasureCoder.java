@@ -18,28 +18,44 @@
 package com.yaningx.onion;
 
 import com.google.common.base.Preconditions;
+import com.sun.jna.Pointer;
 
 /**
  * Abstract class to implement ErasureCoder.
  */
-public class AbstractErasureCoder implements ErasureCoder {
+public abstract class AbstractErasureCoder implements ErasureCoder {
+    private int[] codingMatrix;
     private int dataBlockNum;
     private int parityBlockNum;
     private int wordSize;
 
-    public AbstractErasureCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+    public AbstractErasureCoder(int[] codingMatrix, int dataBlockNum, int parityBlockNum, int wordSize) {
         Preconditions.checkArgument(dataBlockNum > 0);
         Preconditions.checkArgument(parityBlockNum > 0);
         //TODO judege wordsize is valiable
+        this.codingMatrix = codingMatrix;
         this.dataBlockNum = dataBlockNum;
         this.parityBlockNum = parityBlockNum;
         this.wordSize = wordSize;
     }
 
 
+    /**
+     * There are several coding techniques, and this method is to be implemented by subclass
+     */
+    public abstract void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
+                                  int dataBlockNum, int parityBlockNum, int wordSize);
+
     /** {@inheritDoc} */
     public byte[][] encode(byte[][] data) {
-        return new byte[0][];
+        Preconditions.checkArgument(data.length > 0);
+        Pointer[] dataPointer = ECUtils.toPointerArray(data);
+        int size = data[0].length;
+        byte[][] parity = new byte[parityBlockNum][size];
+        Pointer[] parityPointer = ECUtils.toPointerArray(parity);
+        doEncode(dataPointer, parityPointer, dataBlockNum, parityBlockNum, wordSize);
+        ECUtils.toByteArray(parityPointer, parity);
+        return parity;
     }
 
     /** {@inheritDoc} */

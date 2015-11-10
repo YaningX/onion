@@ -38,7 +38,7 @@ public class ECTest {
      * @param m
      * @throws IOException
      */
-    private void runWith(ErasureCoder coder, File oriFile, int k, int m) throws IOException {
+    private void runWith(ErasureCoder coder, File backupDir, File oriFile, int k, int m) throws IOException {
         long dataSize = oriFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int blockSize = (int) dataSize / k;
@@ -62,15 +62,37 @@ public class ECTest {
          * Write data blocks into files.
          */
         for (int i = 0; i < k; i++) {
-
+            writeFile(data[i], backupDir, oriFile.getName() + "_k" + (i + 1));
         }
 
         /**
          * Write parity blocks into files.
          */
         for (int i = 0; i < m; i++) {
-
+            writeFile(parity[i], backupDir, oriFile.getName() + "_m" + (i + 1));
         }
+
+    }
+
+    private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
+        if (!backupDir.exists() || !backupDir.mkdir()) {
+            throw new IOException("Cannot make backup directory");
+        }
+        File file = new File(backupDir, fileName);
+        OutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(data);
+        outputStream.close();
+    }
+
+
+    private void readFile(byte[] data, File file) throws IOException {
+        InputStream inputStream = new FileInputStream(file);
+        inputStream.read(data);
+        inputStream.close();
+    }
+
+    private void readFile(byte[] data, String backupDir, String fileName) throws IOException {
+        readFile(data, new File(backupDir + fileName));
     }
 
     @Test
@@ -79,8 +101,12 @@ public class ECTest {
         this.m = 3;
         this.wordSize = 8;
         this.coder = new VandermondeRSCoder(k, m, wordSize);
+        /**
+         * Write data blocks into files.
+         */
+        File backupDir = new File("/Users/xuyaning/work/backup");
         File oriFile = new File("");
-        runWith(coder, oriFile, k, m);
+        runWith(coder, backupDir, oriFile, k, m);
     }
 
 }

@@ -58,10 +58,18 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
     /**
      * There are several decoding techniques, and this method is to be implemented by subclass
      */
-    protected abstract void doDecode();
+    protected abstract boolean doDecode();
 
     /** {@inheritDoc} */
-    public void decode(int[] erasures, byte[][] data, byte[][] coding) {
+    public void decode(int[] erasures, byte[][] data, byte[][] parity) {
+        Preconditions.checkArgument(data.length > 0);
+
+        Pointer[] dataPointer = ECUtils.toPointerArray(data);
+        Pointer[] parityPointer = ECUtils.toPointerArray(parity);
+
+        int blockSize = data[0].length;
+
+        doDecode();
 
     }
 

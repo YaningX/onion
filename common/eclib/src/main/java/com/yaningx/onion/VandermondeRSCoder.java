@@ -24,25 +24,26 @@ import com.sun.jna.Pointer;
  * A vandermonde Reed Solomon code implementation.
  */
 public class VandermondeRSCoder extends AbstractErasureCoder {
+    private Pointer matrix;
 
     public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
+        Preconditions.checkArgument(wordSize == 8 || wordSize == 16 ||
+                wordSize == 32, "For Matrix-Based Coding, wordSize must be 8, 16 or 32.");
+        this.matrix = JerasureLibrary.INSTANCE.
+                reed_sol_vandermonde_coding_matrix(dataBlockNum, parityBlockNum, wordSize);
     }
 
     @Override
     protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
                             int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
-        Preconditions.checkArgument(wordSize == 8 || wordSize == 16 ||
-                wordSize == 32, "For Matrix-Based Coding, wordSize must be 8, 16 or 32.");
-        Pointer matrix = JerasureLibrary.INSTANCE.
-                reed_sol_vandermonde_coding_matrix(dataBlockNum, parityBlockNum, wordSize);
         JerasureLibrary.INSTANCE.jerasure_matrix_encode(dataBlockNum,
                 parityBlockNum, wordSize, matrix.getIntArray(0, dataBlockNum * parityBlockNum),
                 dataPointer, parityPointer, wordSize);
     }
 
     @Override
-    protected void doDecode() {
-
+    protected boolean doDecode() {
+        return false;
     }
 }

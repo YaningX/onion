@@ -48,7 +48,7 @@ public class CauchyRSCoder extends AbstractErasureCoder {
     }
 
     @Override
-    protected void doDecode() {
-
+    protected boolean doDecode() {
+        return false;
     }
 }

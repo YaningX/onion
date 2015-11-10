@@ -62,16 +62,18 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
 
     /** {@inheritDoc} */
     public void decode(int[] erasures, byte[][] data, byte[][] coding) {
-        
+
     }
 
     /** {@inheritDoc} */
     public byte[] repair(int failedBlock, byte[][] data) {
+        //TODO
         return new byte[0];
     }
 
     /** {@inheritDoc} */
     public byte[] naiveRepair(int failedBlock, byte[][] data) {
+        //TODO
         return new byte[0];
     }
 }

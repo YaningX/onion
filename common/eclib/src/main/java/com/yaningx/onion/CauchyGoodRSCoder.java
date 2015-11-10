@@ -20,15 +20,27 @@ package com.yaningx.onion;
 import com.sun.jna.Pointer;
 
 public class CauchyGoodRSCoder extends AbstractErasureCoder {
+    private int packetSize;
 
-    public CauchyGoodRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+    public CauchyGoodRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
+        this.packetSize = packetSize;
     }
 
     @Override
     protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
-                            int dataBlockNum, int parityBlockNum, int wordSize) {
-
+                            int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
+        int[] matrix = JerasureLibrary.INSTANCE.
+                cauchy_good_general_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
+                getIntArray(0, dataBlockNum * parityBlockNum);
+        int[] bitMatrix = JerasureLibrary.INSTANCE.
+                jerasure_matrix_to_bitmatrix(dataBlockNum, parityBlockNum, wordSize, matrix).
+                getIntArray(0, dataBlockNum * wordSize * parityBlockNum * wordSize);
+        Pointer[] schedule = JerasureLibrary.INSTANCE.
+                jerasure_smart_bitmatrix_to_schedule(dataBlockNum, parityBlockNum, wordSize, bitMatrix);
+        JerasureLibrary.INSTANCE.
+                jerasure_schedule_encode(dataBlockNum, parityBlockNum,
+                        wordSize, schedule, dataPointer, parityPointer, blockSize, packetSize);
     }
 
     @Override

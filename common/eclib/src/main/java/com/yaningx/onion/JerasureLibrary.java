@@ -30,6 +30,11 @@ public interface JerasureLibrary extends Library {
             JerasureLibrary.class);
 
     /**
+     * Allocates and returns a m × k Vandermonde matrix in GF(2^w).
+     */
+    Pointer reed_sol_vandermonde_coding_matrix(int k, int m, int w);
+
+    /**
      * Allocates and returns a Cauchy matrix in GF(2^w).
      */
     Pointer cauchy_original_coding_matrix(int k, int m, int w);
@@ -55,7 +60,7 @@ public interface JerasureLibrary extends Library {
      *                  of these must be long word aligned
      * @param coding_ptrs An array of m pointers to size bytes worth of coding
      *                    data. Each of these must be long word aligned
-     * @param size The total number of bytes per device to encode
+     * @param size The total number of bytes per device to encode, actually blocksize
      */
     void jerasure_matrix_encode(int k, int m, int w, int[] matrix,
                                 Pointer[] data_ptrs, Pointer[] coding_ptrs, int size);

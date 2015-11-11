@@ -43,11 +43,10 @@ public class ECTest {
         long dataSize = oriFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int blockSize = (int) dataSize / k;
-        int paddingSize = 0;
-
-        if (dataSize != blockSize * k) {
+        int wholeSize = blockSize * k;
+        if (dataSize != wholeSize) {
             blockSize++;
-            paddingSize = blockSize * k - (int) dataSize;
+            wholeSize = blockSize * k;
         }
 
         /**
@@ -55,20 +54,15 @@ public class ECTest {
          */
         byte[][] data = new byte[k][blockSize];
         InputStream inputStream = new FileInputStream(oriFile);
-        for (int i = 0; i < (int) dataSize / blockSize; i++) {
-            inputStream.read(data[i], 0, blockSize);
+        byte[] wholeData = new byte[wholeSize];
+        inputStream.read(wholeData);
+        Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
+        for (int i = 0; i < k; i++) {
+            System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
         }
-        inputStream.read(data[(int) dataSize / blockSize]);
-        for (int i = (int) dataSize / blockSize; i < k; i++) {
-
-        }
-
-
-        inputStream.read(data[k - 1]);
-        Arrays.fill(data, blockSize - paddingSize - 1, blockSize - 1, (byte) 0);
 
         /**
-         *
+         * Encode and generate the parity blocks.
          */
         byte[][] parity = coder.encode(data);
         /**
@@ -87,7 +81,7 @@ public class ECTest {
     }
 
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
-        if (!backupDir.exists() || !backupDir.mkdir()) {
+        if (!backupDir.exists() && !backupDir.mkdir()) {
             throw new IOException("Cannot make backup directory");
         }
         File file = new File(backupDir, fileName);
@@ -118,7 +112,7 @@ public class ECTest {
          */
         File backupDir = new File("/Users/xuyaning/work/backup");
         File oriFile = new File(backupDir, "origin.txt");
-        byte[] data = new byte[(int) oriFile.length()];
+        runWith(backupDir, oriFile, k, m);
 
     }
 

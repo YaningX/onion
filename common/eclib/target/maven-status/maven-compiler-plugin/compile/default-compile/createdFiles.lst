@@ -1,0 +1,7 @@
+com/yaningx/onion/CauchyGoodRSCoder.class
+com/yaningx/onion/AbstractErasureCoder.class
+com/yaningx/onion/VandermondeRSCoder.class
+com/yaningx/onion/ErasureCoder.class
+com/yaningx/onion/CauchyRSCoder.class
+com/yaningx/onion/ECUtils.class
+com/yaningx/onion/JerasureLibrary.class

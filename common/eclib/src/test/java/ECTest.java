@@ -1,11 +1,3 @@
-import com.google.common.base.Preconditions;
-import com.yaningx.onion.ErasureCoder;
-import com.yaningx.onion.VandermondeRSCoder;
-import org.junit.Test;
-
-import java.io.*;
-import java.util.Arrays;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +15,15 @@ import java.util.Arrays;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.google.common.base.Preconditions;
+import com.yaningx.onion.ErasureCoder;
+import com.yaningx.onion.VandermondeRSCoder;
+import org.junit.Test;
+
+import java.io.*;
+import java.util.Arrays;
+
 public class ECTest {
     private ErasureCoder coder;
     private int k;
@@ -38,7 +39,7 @@ public class ECTest {
      * @param m
      * @throws IOException
      */
-    private void runWith(ErasureCoder coder, File backupDir, File oriFile, int k, int m) throws IOException {
+    private void runWith(File backupDir, File oriFile, int k, int m) throws IOException {
         long dataSize = oriFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int blockSize = (int) dataSize / k;
@@ -49,14 +50,26 @@ public class ECTest {
             paddingSize = blockSize * k - (int) dataSize;
         }
 
+        /**
+         *  Read data from a file into a two-dimension array.
+         */
         byte[][] data = new byte[k][blockSize];
         InputStream inputStream = new FileInputStream(oriFile);
-        for (int i = 0; i < data.length - 1; i++) {
-            inputStream.read(data[i], i * blockSize, i * blockSize + blockSize - 1);
+        for (int i = 0; i < (int) dataSize / blockSize; i++) {
+            inputStream.read(data[i], 0, blockSize);
         }
+        inputStream.read(data[(int) dataSize / blockSize]);
+        for (int i = (int) dataSize / blockSize; i < k; i++) {
+
+        }
+
+
         inputStream.read(data[k - 1]);
         Arrays.fill(data, blockSize - paddingSize - 1, blockSize - 1, (byte) 0);
 
+        /**
+         *
+         */
         byte[][] parity = coder.encode(data);
         /**
          * Write data blocks into files.
@@ -71,7 +84,6 @@ public class ECTest {
         for (int i = 0; i < m; i++) {
             writeFile(parity[i], backupDir, oriFile.getName() + "_m" + (i + 1));
         }
-
     }
 
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
@@ -105,8 +117,9 @@ public class ECTest {
          * Write data blocks into files.
          */
         File backupDir = new File("/Users/xuyaning/work/backup");
-        File oriFile = new File("");
-        runWith(coder, backupDir, oriFile, k, m);
+        File oriFile = new File(backupDir, "origin.txt");
+        byte[] data = new byte[(int) oriFile.length()];
+
     }
 
 }

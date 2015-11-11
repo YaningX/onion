@@ -51,6 +51,7 @@ public class ECTest {
 
         /**
          *  Read data from a file into a two-dimension array.
+         *  This implementation may be slow, so a faster method is to be implemented in the further.
          */
         byte[][] data = new byte[k][blockSize];
         InputStream inputStream = new FileInputStream(oriFile);

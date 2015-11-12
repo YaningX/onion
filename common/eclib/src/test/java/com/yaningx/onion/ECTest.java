@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+package com.yaningx.onion;
+
 import com.google.common.base.Preconditions;
-import com.yaningx.onion.ErasureCoder;
-import com.yaningx.onion.VandermondeRSCoder;
 import org.junit.Test;
 
 import java.io.*;
@@ -51,12 +51,10 @@ public class ECTest {
 
         /**
          *  Read data from a file into a two-dimension array.
-         *  This implementation may be slow, so a faster method is to be implemented in the further.
          */
         byte[][] data = new byte[k][blockSize];
-        InputStream inputStream = new FileInputStream(oriFile);
         byte[] wholeData = new byte[wholeSize];
-        inputStream.read(wholeData);
+        readFile(wholeData, oriFile);
         Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
         for (int i = 0; i < k; i++) {
             System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
@@ -81,6 +79,10 @@ public class ECTest {
         }
     }
 
+    private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
+        for
+    }
+
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
         if (!backupDir.exists() && !backupDir.mkdir()) {
             throw new IOException("Cannot make backup directory");
@@ -96,10 +98,6 @@ public class ECTest {
         InputStream inputStream = new FileInputStream(file);
         inputStream.read(data);
         inputStream.close();
-    }
-
-    private void readFile(byte[] data, String backupDir, String fileName) throws IOException {
-        readFile(data, new File(backupDir + fileName));
     }
 
     @Test

@@ -23,6 +23,9 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ECTest {
     private ErasureCoder coder;
@@ -35,8 +38,6 @@ public class ECTest {
      * If the size is larger than 32GB, it is to be implemented by being divided into several pieces.
      * This is not done in this test, but will be done in the main code base.
      * @param oriFile
-     * @param k
-     * @param m
      * @throws IOException
      */
     private void runWith(File backupDir, File oriFile) throws IOException {
@@ -78,18 +79,71 @@ public class ECTest {
             writeFile(parity[i], backupDir, oriFile.getName() + "_m" + (i + 1));
         }
 
+        /**
+         * Delete some files
+         */
+        deleteFile(generateRadomArray(m), backupDir, oriFile);
 
+        byte[][] newData = new byte[k][blockSize];
+        byte[][] newParity = new byte[m][blockSize];
+        int[] erasures = checkAndLoadFile(newData, newParity, backupDir, oriFile);
+        coder.decode(erasures, newData, newParity);
+        writeRecoverFile(newData);
     }
 
+    private void writeRecoverFile(byte[][] newData) {
+        //TODO
+    }
+    private int[] generateRadomArray(int ArrayLen) {
+        int[] randomArray = new int[ArrayLen];
+        //TODO
+        return randomArray;
+    }
 
-    private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
+    private void deleteFile(int[] deletes, File backupDir, File oriFile) throws IOException {
+        File deleteFile;
+        for (int i = 0; i < deletes.length; i++) {
+            if (deletes[i] < k) {
+                deleteFile = new File(backupDir, oriFile.getName() + "_k" + deletes[i]);
+            } else {
+                deleteFile = new File(backupDir, oriFile.getName() + "_m" + (deletes[i] - k + 1));
+            }
+            if (deleteFile.exists()) {
+                if (!deleteFile.delete()) {
+                    throw new IOException();
+                }
+            }
+        }
+    }
+
+    private int[] checkAndLoadFile(byte[][] data, byte[][] parity, File backupDir, File oriFile) throws IOException {
+        List<Integer> erasureList = new LinkedList<Integer>();
         for (int i = 0; i < k; i++) {
-
+            File dataFile = new File(backupDir, oriFile.getName() + "_k" + (i + 1));
+            if (dataFile.exists()) {
+                readFile(data[i], dataFile);
+            } else {
+                erasureList.add(i);
+            }
         }
 
         for (int i = 0; i < m; i++) {
-
+            File parityFile = new File(backupDir, oriFile.getName() + "_m" + (i + 1));
+            if (parityFile.exists()) {
+                readFile(parity[i], parityFile);
+            } else {
+                erasureList.add(i + k);
+            }
         }
+
+        //Return erasures array.
+        int[] erasures = new int[erasureList.size()];
+        Iterator<Integer> iterator = erasureList.iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            erasures[i++] = iterator.next();
+        }
+        return erasures;
     }
 
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
@@ -122,5 +176,4 @@ public class ECTest {
         File oriFile = new File(backupDir, "origin.txt");
         runWith(backupDir, oriFile);
     }
-
 }

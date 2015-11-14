@@ -48,7 +48,9 @@ public class CauchyRSCoder extends AbstractErasureCoder {
     }
 
     @Override
-    protected boolean doDecode() {
+    protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] erasures,
+                               int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
         return false;
     }
+
 }

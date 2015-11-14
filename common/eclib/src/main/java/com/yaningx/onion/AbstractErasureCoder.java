@@ -68,16 +68,33 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
         Pointer[] dataPointer = ECUtils.toPointerArray(data);
         Pointer[] parityPointer = ECUtils.toPointerArray(parity);
 
-        int blockSize = data[0].length;
+        //Adjust erasures[], for Jerasure, "-1" represents the erasure index bound.
+        int[] jerasures = new int[erasures.length + 1];
+        System.arraycopy(erasures, 0, jerasures, 0, erasures.length);
+        jerasures[erasures.length] = -1;
 
+        int blockSize = data[0].length;
         boolean ret = doDecode(dataPointer, parityPointer,
                 erasures, dataBlockNum, parityBlockNum, wordSize, blockSize);
         if (ret == true) {
-
+            copyBackDecoded(data, parity, dataPointer, parityPointer, jerasures);
         } else {
-
+            throw new RuntimeException("Decode fail, return_code=" + ret);
         }
     }
+
+    private void copyBackDecoded(byte[][] data, byte[][] parity,
+                                 Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures) {
+        for (int i = 0; i < jerasures.length - 1; i++) {
+            if (jerasures[i] < dataBlockNum) {
+                data[jerasures[i]] = dataPointer[jerasures[i]].getByteArray(0, data[jerasures[i]].length);
+            } else {
+                parity[jerasures[i] - dataBlockNum] = parityPointer[jerasures[i] - dataBlockNum].
+                        getByteArray(0, parity[jerasures[jerasures[i] - dataBlockNum]].length);
+            }
+        }
+    }
+
 
     /** {@inheritDoc} */
     public byte[] repair(int failedBlock, byte[][] data) {

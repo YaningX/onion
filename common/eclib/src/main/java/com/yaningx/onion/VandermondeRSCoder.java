@@ -50,5 +50,4 @@ public class VandermondeRSCoder extends AbstractErasureCoder {
                 dataPointer, parityPointer, blockSize);
         return false;
     }
-
 }

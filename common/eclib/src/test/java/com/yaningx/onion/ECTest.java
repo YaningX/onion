@@ -39,7 +39,7 @@ public class ECTest {
      * @param m
      * @throws IOException
      */
-    private void runWith(File backupDir, File oriFile, int k, int m) throws IOException {
+    private void runWith(File backupDir, File oriFile) throws IOException {
         long dataSize = oriFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int blockSize = (int) dataSize / k;
@@ -78,11 +78,18 @@ public class ECTest {
             writeFile(parity[i], backupDir, oriFile.getName() + "_m" + (i + 1));
         }
 
-        
+
     }
 
-    private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
 
+    private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
+        for (int i = 0; i < k; i++) {
+
+        }
+
+        for (int i = 0; i < m; i++) {
+
+        }
     }
 
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {
@@ -113,8 +120,7 @@ public class ECTest {
          */
         File backupDir = new File("/Users/xuyaning/work/backup");
         File oriFile = new File(backupDir, "origin.txt");
-        runWith(backupDir, oriFile, k, m);
-
+        runWith(backupDir, oriFile);
     }
 
 }

@@ -39,12 +39,15 @@ public class VandermondeRSCoder extends AbstractErasureCoder {
                             int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
         JerasureLibrary.INSTANCE.jerasure_matrix_encode(dataBlockNum,
                 parityBlockNum, wordSize, matrix.getIntArray(0, dataBlockNum * parityBlockNum),
-                dataPointer, parityPointer, wordSize);
+                dataPointer, parityPointer, blockSize);
     }
 
     @Override
-    protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] erasures,
+    protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures,
                                int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
+        JerasureLibrary.INSTANCE.jerasure_matrix_decode(dataBlockNum, parityBlockNum, wordSize,
+                matrix.getIntArray(0, dataBlockNum * parityBlockNum), jerasures,
+                dataPointer, parityPointer, blockSize);
         return false;
     }
 

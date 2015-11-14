@@ -77,6 +77,8 @@ public class ECTest {
         for (int i = 0; i < m; i++) {
             writeFile(parity[i], backupDir, oriFile.getName() + "_m" + (i + 1));
         }
+
+        
     }
 
     private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
@@ -114,5 +116,5 @@ public class ECTest {
         runWith(backupDir, oriFile, k, m);
 
     }
-    
+
 }

@@ -80,7 +80,7 @@ public class ECTest {
     }
 
     private void checkAndLoadFile(int erasures[], byte[][] data, byte[][] parity, File oriFile) throws IOException {
-        for
+
     }
 
     private void writeFile(byte[] data, File backupDir, String fileName) throws IOException {

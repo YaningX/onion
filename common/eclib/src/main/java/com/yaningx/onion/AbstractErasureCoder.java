@@ -58,7 +58,8 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
     /**
      * There are several decoding techniques, and this method is to be implemented by subclass
      */
-    protected abstract boolean doDecode();
+    protected abstract boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] erasures,
+                                        int dataBlockNum, int parityBlockNum, int wordSize, int blockSize);
 
     /** {@inheritDoc} */
     public void decode(int[] erasures, byte[][] data, byte[][] parity) {
@@ -69,8 +70,13 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
 
         int blockSize = data[0].length;
 
-        doDecode();
+        boolean ret = doDecode(dataPointer, parityPointer,
+                erasures, dataBlockNum, parityBlockNum, wordSize, blockSize);
+        if (ret == true) {
 
+        } else {
+
+        }
     }
 
     /** {@inheritDoc} */

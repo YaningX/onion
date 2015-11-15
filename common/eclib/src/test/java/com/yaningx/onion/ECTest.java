@@ -22,10 +22,7 @@ import com.google.common.base.Preconditions;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ECTest {
     private ErasureCoder coder;
@@ -65,6 +62,7 @@ public class ECTest {
          * Encode and generate the parity blocks.
          */
         byte[][] parity = coder.encode(data);
+
         /**
          * Write data blocks into files.
          */
@@ -88,15 +86,28 @@ public class ECTest {
         byte[][] newParity = new byte[m][blockSize];
         int[] erasures = checkAndLoadFile(newData, newParity, backupDir, oriFile);
         coder.decode(erasures, newData, newParity);
-        writeRecoverFile(newData);
+        writeRecoverFile(newData, backupDir, oriFile);
     }
 
-    private void writeRecoverFile(byte[][] newData) {
-        //TODO
+    private void writeRecoverFile(byte[][] newData, File backupFile, File oriFile) throws IOException {
+        File recoverFile = new File(backupFile, "recovered" + oriFile.getName());
+        OutputStream outputStream = new FileOutputStream(recoverFile, true);
+        for (int i = 0; i < k; i++) {
+            outputStream.write(newData[i]);
+        }
+        outputStream.close();
     }
     private int[] generateRadomArray(int ArrayLen) {
         int[] randomArray = new int[ArrayLen];
-        //TODO
+        List<Integer> list = new ArrayList<Integer>(k + m);
+        for (int i = 0; i < k + m; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+
+        for (int i = 0; i < m; i++) {
+            randomArray[i] = list.get(i);
+        }
         return randomArray;
     }
 

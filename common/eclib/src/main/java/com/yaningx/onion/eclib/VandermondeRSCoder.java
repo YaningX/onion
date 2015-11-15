@@ -15,38 +15,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yaningx.onion;
+package com.yaningx.onion.eclib;
 
+import com.google.common.base.Preconditions;
 import com.sun.jna.Pointer;
 
-public class CauchyGoodRSCoder extends AbstractErasureCoder {
-    private int packetSize;
+/**
+ * A vandermonde Reed Solomon code implementation.
+ */
+public class VandermondeRSCoder extends AbstractErasureCoder {
+    private Pointer matrix;
 
-    public CauchyGoodRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
+    public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
-        this.packetSize = packetSize;
+        Preconditions.checkArgument(wordSize == 8 || wordSize == 16 ||
+                wordSize == 32, "For Matrix-Based Coding, wordSize must be 8, 16 or 32.");
+        this.matrix = JerasureLibrary.INSTANCE.
+                reed_sol_vandermonde_coding_matrix(dataBlockNum, parityBlockNum, wordSize);
     }
 
     @Override
     protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
                             int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
-        int[] matrix = JerasureLibrary.INSTANCE.
-                cauchy_good_general_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
-                getIntArray(0, dataBlockNum * parityBlockNum);
-        int[] bitMatrix = JerasureLibrary.INSTANCE.
-                jerasure_matrix_to_bitmatrix(dataBlockNum, parityBlockNum, wordSize, matrix).
-                getIntArray(0, dataBlockNum * wordSize * parityBlockNum * wordSize);
-        Pointer[] schedule = JerasureLibrary.INSTANCE.
-                jerasure_smart_bitmatrix_to_schedule(dataBlockNum, parityBlockNum, wordSize, bitMatrix);
-        JerasureLibrary.INSTANCE.
-                jerasure_schedule_encode(dataBlockNum, parityBlockNum,
-                        wordSize, schedule, dataPointer, parityPointer, blockSize, packetSize);
+        JerasureLibrary.INSTANCE.jerasure_matrix_encode(dataBlockNum,
+                parityBlockNum, wordSize, matrix.getIntArray(0, dataBlockNum * parityBlockNum),
+                dataPointer, parityPointer, blockSize);
     }
 
     @Override
     protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures,
                                int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
+        JerasureLibrary.INSTANCE.jerasure_matrix_decode(dataBlockNum, parityBlockNum, wordSize,
+                matrix.getIntArray(0, dataBlockNum * parityBlockNum), jerasures,
+                dataPointer, parityPointer, blockSize);
         return false;
     }
-
 }

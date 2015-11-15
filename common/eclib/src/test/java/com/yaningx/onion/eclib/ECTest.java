@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.yaningx.onion;
+package com.yaningx.onion.eclib;
 
 import com.google.common.base.Preconditions;
 import org.junit.Test;

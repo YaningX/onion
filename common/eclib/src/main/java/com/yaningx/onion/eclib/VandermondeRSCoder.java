@@ -24,30 +24,31 @@ import com.sun.jna.Pointer;
  * A vandermonde Reed Solomon code implementation.
  */
 public class VandermondeRSCoder extends AbstractErasureCoder {
-    private Pointer matrix;
+    private int[] vandermondMatrix;
 
     public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
         Preconditions.checkArgument(wordSize == 8 || wordSize == 16 ||
                 wordSize == 32, "For Matrix-Based Coding, wordSize must be 8, 16 or 32.");
-        this.matrix = JerasureLibrary.INSTANCE.
-                reed_sol_vandermonde_coding_matrix(dataBlockNum, parityBlockNum, wordSize);
+        this.vandermondMatrix = JerasureLibrary.INSTANCE.
+                reed_sol_vandermonde_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
+        getIntArray(0, dataBlockNum * parityBlockNum);
     }
 
     @Override
     protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
                             int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
         JerasureLibrary.INSTANCE.jerasure_matrix_encode(dataBlockNum,
-                parityBlockNum, wordSize, matrix.getIntArray(0, dataBlockNum * parityBlockNum),
+                parityBlockNum, wordSize, vandermondMatrix,
                 dataPointer, parityPointer, blockSize);
     }
 
     @Override
     protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures,
                                int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
-        JerasureLibrary.INSTANCE.jerasure_matrix_decode(dataBlockNum, parityBlockNum, wordSize,
-                matrix.getIntArray(0, dataBlockNum * parityBlockNum), jerasures,
+        int ret = JerasureLibrary.INSTANCE.jerasure_matrix_decode(dataBlockNum, parityBlockNum, wordSize,
+                vandermondMatrix, 1, jerasures,
                 dataPointer, parityPointer, blockSize);
-        return false;
+        return ret == 0 ? true : false;
     }
 }

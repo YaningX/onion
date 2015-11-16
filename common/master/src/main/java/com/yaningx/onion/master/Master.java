@@ -21,5 +21,5 @@ package com.yaningx.onion.master;
  * Onion master interface.
  */
 public interface Master {
-    
+
 }

@@ -72,6 +72,8 @@ public interface JerasureLibrary extends Library {
      * @param m The number of coding devices
      * @param w The word size of the code
      * @param matrix An array with k*m elements that representing the coding matrix
+     * @param row_k_ones A number which should be one if the first row of matrix
+     *                   is all ones
      * @param erasures An array of id’s of erased devices
      * @param data_ptrs An array of k pointers to size bytes worth of data. Each
      *                  of these must be long word aligned
@@ -81,7 +83,7 @@ public interface JerasureLibrary extends Library {
      * @return 0 on success, -1 on failure
      */
     int jerasure_matrix_decode(int k, int m, int w, int[] matrix,
-                               int[] erasures, Pointer[] data_ptrs,
+                               int row_k_ones, int[] erasures, Pointer[] data_ptrs,
                                Pointer[] coding_ptrs, int size);
 
     /**

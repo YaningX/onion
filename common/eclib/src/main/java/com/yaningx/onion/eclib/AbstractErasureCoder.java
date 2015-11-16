@@ -85,12 +85,12 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
 
     private void copyBackDecoded(byte[][] data, byte[][] parity,
                                  Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures) {
-        for (int i = 0; i < jerasures.length - 1; i++) {
+        for (int i = 0; i < jerasures.length - 1; ++i) {
             if (jerasures[i] < dataBlockNum) {
                 data[jerasures[i]] = dataPointer[jerasures[i]].getByteArray(0, data[jerasures[i]].length);
             } else {
                 parity[jerasures[i] - dataBlockNum] = parityPointer[jerasures[i] - dataBlockNum].
-                        getByteArray(0, parity[jerasures[jerasures[i] - dataBlockNum]].length);
+                        getByteArray(0, data[0].length);
             }
         }
     }
@@ -107,4 +107,5 @@ public abstract class AbstractErasureCoder implements ErasureCoder {
         //TODO
         return new byte[0];
     }
+
 }

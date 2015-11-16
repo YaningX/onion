@@ -19,6 +19,7 @@
 package com.yaningx.onion.eclib;
 
 import com.google.common.base.Preconditions;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
@@ -40,6 +41,7 @@ public class ECTest {
     private void runWith(File backupDir, File oriFile) throws IOException {
         long dataSize = oriFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
+        int origSize = (int) dataSize;
         int blockSize = (int) dataSize / k;
         int wholeSize = blockSize * k;
         if (dataSize != wholeSize) {
@@ -86,15 +88,27 @@ public class ECTest {
         byte[][] newParity = new byte[m][blockSize];
         int[] erasures = checkAndLoadFile(newData, newParity, backupDir, oriFile);
         coder.decode(erasures, newData, newParity);
-        writeRecoverFile(newData, backupDir, oriFile);
+        writeRecoverFile(newData, backupDir, oriFile, origSize);
     }
 
-    private void writeRecoverFile(byte[][] newData, File backupFile, File oriFile) throws IOException {
+    private void writeRecoverFile(byte[][] newData, File backupFile, File oriFile, int origSize) throws IOException {
         File recoverFile = new File(backupFile, "recovered" + oriFile.getName());
-        OutputStream outputStream = new FileOutputStream(recoverFile, true);
-        for (int i = 0; i < k; i++) {
-            outputStream.write(newData[i]);
+        if (recoverFile.exists()) {
+            if (!recoverFile.delete()) {
+                throw new IOException("Recovered file exists before recovering!");
+            }
         }
+
+        OutputStream outputStream = new FileOutputStream(recoverFile, true);
+        int blockSize = newData[0].length;
+        int writeSize = 0;
+        int i = 0;
+        while (origSize - writeSize > blockSize) {
+            outputStream.write(newData[i]);
+            writeSize += blockSize;
+            i++;
+        }
+        outputStream.write(newData[i], 0, origSize - writeSize);
         outputStream.close();
     }
     private int[] generateRadomArray(int ArrayLen) {
@@ -180,6 +194,7 @@ public class ECTest {
         this.m = 3;
         this.wordSize = 8;
         this.coder = new VandermondeRSCoder(k, m, wordSize);
+        
         /**
          * Write data blocks into files.
          */
@@ -187,4 +202,5 @@ public class ECTest {
         File oriFile = new File(backupDir, "origin.txt");
         runWith(backupDir, oriFile);
     }
+
 }

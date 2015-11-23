@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yaningx.onion.eclib;
+package com.onion.eclib;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;

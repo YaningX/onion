@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
-package com.yaningx.onion.eclib;
+package com.onion.eclib;
 
 import com.google.common.base.Preconditions;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
@@ -194,12 +193,13 @@ public class ECTest {
         this.m = 3;
         this.wordSize = 8;
         this.coder = new VandermondeRSCoder(k, m, wordSize);
-        
+        System.out.println(System.getProperty("user.dir"));
+
         /**
          * Write data blocks into files.
          */
         File backupDir = new File("/Users/xuyaning/work/backup");
-        File oriFile = new File(backupDir, "origin.txt");
+        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
 

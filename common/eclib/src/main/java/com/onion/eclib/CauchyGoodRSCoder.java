@@ -15,17 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yaningx.onion.eclib;
+package com.onion.eclib;
 
 import com.sun.jna.Pointer;
 
-/**
- * A Cauchy Reed Solomon Code implementation.
- */
-public class CauchyRSCoder extends AbstractErasureCoder {
+public class CauchyGoodRSCoder extends AbstractErasureCoder {
     private int packetSize;
 
-    public CauchyRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
+    public CauchyGoodRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
         this.packetSize = packetSize;
     }
@@ -34,7 +31,7 @@ public class CauchyRSCoder extends AbstractErasureCoder {
     protected void doEncode(Pointer[] dataPointer, Pointer[] parityPointer,
                             int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
         int[] matrix = JerasureLibrary.INSTANCE.
-                cauchy_original_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
+                cauchy_good_general_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
                 getIntArray(0, dataBlockNum * parityBlockNum);
         int[] bitMatrix = JerasureLibrary.INSTANCE.
                 jerasure_matrix_to_bitmatrix(dataBlockNum, parityBlockNum, wordSize, matrix).
@@ -44,7 +41,6 @@ public class CauchyRSCoder extends AbstractErasureCoder {
         JerasureLibrary.INSTANCE.
                 jerasure_schedule_encode(dataBlockNum, parityBlockNum,
                         wordSize, schedule, dataPointer, parityPointer, blockSize, packetSize);
-
     }
 
     @Override

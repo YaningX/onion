@@ -17,8 +17,6 @@
  */
 package com.onion.worker.net;
 
-public class BlockReadRequest {
-    private long blockId;
-    private long blockSize;
-    private long offSet;
+public class ErrorResponse {
+
 }

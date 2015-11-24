@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.worker.net;
+package com.onion.net;
 
-public class BlockReadRequest {
-    private long blockId;
-    private long blockSize;
-    private long offSet;
+/**
+ * This test simulate the ecoding and decoding process, and communication between a simple client/server bootstrap connection.
+ * This test just helps us implement network module.
+ */
+public class MiniOnionTest {
 }

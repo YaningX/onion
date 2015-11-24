@@ -17,8 +17,16 @@
  */
 package com.onion.worker.net;
 
-public class BlockReadRequest {
-    private long blockId;
-    private long blockSize;
-    private long offSet;
+public enum TransMessage {
+    ERROR_RESPONSE(1),
+    BLOCK_READ_REQUEST(2),
+    BLOCK_READ_RESPONSE(3),
+    BLOCK_WRITE_REQUEST(4),
+    BLOCK_WRITE_RESPONSE(5);
+
+    private int id;
+
+    private TransMessage(int id) {
+        this.id = id;
+    }
 }

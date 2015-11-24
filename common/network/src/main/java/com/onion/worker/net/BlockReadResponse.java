@@ -15,11 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yaningx.onion.master;
+package com.onion.worker.net;
 
-/**
- * Onion master interface.
- */
-public interface Master {
+public class BlockReadResponse {
 
 }

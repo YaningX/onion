@@ -15,8 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.net;
+package com.onion.worker;
 
+/**
+ * A netty data server. Each worker is a data server, master sends request to data server to read or write data.
+ */
+public class DataServer {
 
-public class BlockWriteRequest {
 }

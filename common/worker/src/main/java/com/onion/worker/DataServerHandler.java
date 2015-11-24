@@ -17,9 +17,11 @@
  */
 package com.onion.worker;
 
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
 /**
  * Handle the request from master.
  */
-public class DataServerHandler {
+public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
 }

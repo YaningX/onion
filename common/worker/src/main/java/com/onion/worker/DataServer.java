@@ -17,9 +17,70 @@
  */
 package com.onion.worker;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
+
 /**
  * A netty data server. Each worker is a data server, master sends request to data server to read or write data.
  */
 public class DataServer {
+    private InetSocketAddress tcpAddress;
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+    private ServerBootstrap bootstrap;
+    private ChannelFuture channelFuture;
+    private static final Logger LOG = LoggerFactory.getLogger(DataServer.class);
 
+    public DataServer(InetSocketAddress tcpAddress) {
+        this.tcpAddress = tcpAddress;
+        bootstrap = new ServerBootstrap();
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup();
+    }
+
+    public void start() throws InterruptedException {
+        bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 100)
+                .handler(new LoggingHandler(LogLevel.INFO))
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline p = ch.pipeline();
+                        p.addLast(new DataServerDecoder());
+                        p.addLast(new DefaultEventExecutorGroup(10), //TODO: to configure.
+                                "KDC_HANDLER",
+                                new DataServerHandler());
+                    }
+                });
+        channelFuture = bootstrap.bind(tcpAddress.getPort()).sync();
+    }
+
+    static class DataServerDecoder extends LengthFieldBasedFrameDecoder {
+        public DataServerDecoder() {
+            super(1024 * 1024, 0, 4, 0, 4, true);
+        }
+    }
+
+    public synchronized void stop() {
+        channelFuture.removeListeners().channel().close().awaitUninterruptibly();
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
+    }
+
+    public static void main(String[] strings) throws InterruptedException {
+        DataServer server = new DataServer(new InetSocketAddress(10000));
+        server.start();
+    }
 }

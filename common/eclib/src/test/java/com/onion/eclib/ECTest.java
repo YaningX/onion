@@ -198,7 +198,7 @@ public class ECTest {
         /**
          * Write data blocks into files.
          */
-        File backupDir = new File("/Users/xuyaning/work/backup");
+        File backupDir = new File("/home/gkq/IdeaProjects/onion/backup");
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }

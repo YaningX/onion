@@ -24,7 +24,7 @@ import com.sun.jna.Pointer;
  */
 public class CauchyRSCoder extends AbstractErasureCoder {
     private int packetSize;
-
+    private int[] bitMatrix;
     public CauchyRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
         this.packetSize = packetSize;
@@ -36,7 +36,7 @@ public class CauchyRSCoder extends AbstractErasureCoder {
         int[] matrix = JerasureLibrary.INSTANCE.
                 cauchy_original_coding_matrix(dataBlockNum, parityBlockNum, wordSize).
                 getIntArray(0, dataBlockNum * parityBlockNum);
-        int[] bitMatrix = JerasureLibrary.INSTANCE.
+        this.bitMatrix= JerasureLibrary.INSTANCE.
                 jerasure_matrix_to_bitmatrix(dataBlockNum, parityBlockNum, wordSize, matrix).
                 getIntArray(0, dataBlockNum * wordSize * parityBlockNum * wordSize);
         Pointer[] schedule = JerasureLibrary.INSTANCE.
@@ -50,7 +50,10 @@ public class CauchyRSCoder extends AbstractErasureCoder {
     @Override
     protected boolean doDecode(Pointer[] dataPointer, Pointer[] parityPointer, int[] jerasures,
                                int dataBlockNum, int parityBlockNum, int wordSize, int blockSize) {
-        return false;
+        int ret = JerasureLibrary.INSTANCE.
+                jerasure_schedule_decode_lazy(dataBlockNum, parityBlockNum, wordSize, this.bitMatrix, jerasures,
+                        dataPointer, parityPointer, blockSize, this.packetSize, 1 );
+        return ret == 0 ? true : false;
     }
 
 }

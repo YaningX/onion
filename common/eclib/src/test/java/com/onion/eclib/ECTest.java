@@ -29,6 +29,7 @@ public class ECTest {
     private int k;
     private int m;
     private int wordSize;
+    private int packetSize;
 
     /**
      * Suppose that the size of original file is not larger than 32GB.
@@ -42,12 +43,13 @@ public class ECTest {
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int origSize = (int) dataSize;
         int blockSize = (int) dataSize / k;
-        int wholeSize = blockSize * k;
-        if (dataSize != wholeSize) {
-            blockSize++;
+//        int wholeSize = blockSize * k;
+    /*    if (dataSize != wholeSize) {
+            blockSize = ;
             wholeSize = blockSize * k;
-        }
-
+        }*/
+        blockSize = (blockSize/(packetSize*wordSize) + 1)*(packetSize*wordSize);
+        int wholeSize = blockSize * k;
         /**
          *  Read data from a file into a two-dimension array.
          */
@@ -192,14 +194,18 @@ public class ECTest {
         this.k = 6;
         this.m = 3;
         this.wordSize = 8;
+        this.packetSize = 8;
         this.coder = new VandermondeRSCoder(k, m, wordSize);
+//        this.coder = new CauchyRSCoder(k, m, wordSize,packetSize);
+//        this.coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
         System.out.println(System.getProperty("user.dir"));
 
         /**
          * Write data blocks into files.
          */
         File backupDir = new File("/home/gkq/IdeaProjects/onion/backup");
-        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
+//        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
+        File oriFile = new File(backupDir + "/pom.xml");
         runWith(backupDir, oriFile);
     }
 

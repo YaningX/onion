@@ -48,7 +48,7 @@ public class ECTest {
             blockSize = ;
             wholeSize = blockSize * k;
         }*/
-        blockSize = (blockSize/(packetSize*wordSize) + 1)*(packetSize*wordSize);
+        blockSize = (blockSize / (packetSize * wordSize + 1) + 1) * (packetSize * wordSize);
         int wholeSize = blockSize * k;
         /**
          *  Read data from a file into a two-dimension array.
@@ -196,17 +196,38 @@ public class ECTest {
         this.wordSize = 8;
         this.packetSize = 8;
         this.coder = new VandermondeRSCoder(k, m, wordSize);
-//        this.coder = new CauchyRSCoder(k, m, wordSize,packetSize);
-//        this.coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
-        System.out.println(System.getProperty("user.dir"));
 
-        /**
-         * Write data blocks into files.
-         */
+        System.out.println(System.getProperty("user.dir"));
         File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
-//        File oriFile = new File(backupDir + "/pom.xml");
         runWith(backupDir, oriFile);
     }
+    @Test
+    public void CauchyRSCoder() throws IOException {
+        this.k = 6;
+        this.m = 3;
+        this.wordSize = 8;
+        this.packetSize = 8;
+        this.coder = new CauchyRSCoder(k, m, wordSize, packetSize);
+
+        System.out.println(System.getProperty("user.dir"));
+        File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
+        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
+        runWith(backupDir, oriFile);
+    }
+    @Test
+    public void  CauchyGoodRSCoder() throws IOException {
+        this.k = 6;
+        this.m = 3;
+        this.wordSize = 8;
+        this.packetSize = 8;
+        this.coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
+
+        System.out.println(System.getProperty("user.dir"));
+        File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
+        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
+        runWith(backupDir, oriFile);
+    }
+
 
 }

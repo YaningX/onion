@@ -195,7 +195,14 @@ public class ECTest {
         this.m = 3;
         this.wordSize = 8;
         this.packetSize = 8;
+<<<<<<< HEAD
         this.coder = new VandermondeRSCoder(k, m, wordSize);
+=======
+
+        this.coder = new VandermondeRSCoder(k, m, wordSize);
+//        this.coder = new CauchyRSCoder(k, m, wordSize, packetSize);
+//        this.coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
+>>>>>>> dev
 
         System.out.println(System.getProperty("user.dir"));
         File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
@@ -210,8 +217,15 @@ public class ECTest {
         this.packetSize = 8;
         this.coder = new CauchyRSCoder(k, m, wordSize, packetSize);
 
+<<<<<<< HEAD
         System.out.println(System.getProperty("user.dir"));
         File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
+=======
+        /**
+         * Write data blocks into files.
+         */
+        File backupDir = new File("/home/gkq/IdeaProjects/onion/backup");
+>>>>>>> dev
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }

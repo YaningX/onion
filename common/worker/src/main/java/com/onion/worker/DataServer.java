@@ -40,13 +40,16 @@ public class DataServer {
     private EventLoopGroup workerGroup;
     private ServerBootstrap bootstrap;
     private ChannelFuture channelFuture;
-    private static final Logger LOG = LoggerFactory.getLogger(DataServer.class);
+    private DataServerHandler serverHandler;
+  //  private static final Logger LOG = LoggerFactory.getLogger(DataServer.class);
 
     public DataServer(InetSocketAddress tcpAddress) {
         this.tcpAddress = tcpAddress;
-        bootstrap = new ServerBootstrap();
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
+        this.bootstrap = new ServerBootstrap();
+        this.bossGroup = new NioEventLoopGroup(1);
+        this.workerGroup = new NioEventLoopGroup();
+        this.serverHandler = new DataServerHandler();
+
     }
 
     public void start() throws InterruptedException {
@@ -54,24 +57,10 @@ public class DataServer {
                 .channel(NioServerSocketChannel.class)
                 .option(ChannelOption.SO_BACKLOG, 100)
                 .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline p = ch.pipeline();
-                        p.addLast(new DataServerDecoder());
-                        p.addLast(new DefaultEventExecutorGroup(10), //TODO: to configure.
-                                "KDC_HANDLER",
-                                new DataServerHandler());
-                    }
-                });
+                .childHandler(new DataServerPipelineHandler(serverHandler));
         channelFuture = bootstrap.bind(tcpAddress.getPort()).sync();
     }
 
-    static class DataServerDecoder extends LengthFieldBasedFrameDecoder {
-        public DataServerDecoder() {
-            super(1024 * 1024, 0, 4, 0, 4, true);
-        }
-    }
 
     public synchronized void stop() {
         channelFuture.removeListeners().channel().close().awaitUninterruptibly();
@@ -80,7 +69,7 @@ public class DataServer {
     }
 
     public static void main(String[] strings) throws InterruptedException {
-        DataServer server = new DataServer(new InetSocketAddress(10000));
+        DataServer server = new DataServer(new InetSocketAddress(8007));
         server.start();
     }
 }

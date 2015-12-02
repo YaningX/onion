@@ -17,11 +17,25 @@
  */
 package com.onion.worker;
 
-import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.socket.SocketChannel;
+
 
 /**
- * Handle the request from master.
+ * Adds the block server's pipeline into the channel.
  */
-public class DataServerHandler extends ChannelHandlerAdapter {
+public final class DataServerPipelineHandler extends ChannelInitializer<SocketChannel> {
+    private final DataServerHandler mDataServerHandler;
 
+    public DataServerPipelineHandler(final DataServerHandler handler) {
+        this.mDataServerHandler = handler;
+    }
+
+
+    @Override
+    protected void initChannel(SocketChannel ch) throws Exception {
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(mDataServerHandler);
+    }
 }

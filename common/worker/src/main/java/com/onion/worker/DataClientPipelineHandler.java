@@ -17,35 +17,16 @@
  */
 package com.onion.worker;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
 
-import java.net.InetSocketAddress;
-
-public class DataClient {
-    private EventLoopGroup group;
-    private InetSocketAddress tcpAddress;
+public class DataClientPipelineHandler extends ChannelInitializer<SocketChannel> {
     private DataClientHandler dataClientHandler;
-
-    public DataClient(InetSocketAddress tcpAddress) {
-        this.tcpAddress = tcpAddress;
-        this.dataClientHandler = new DataClientHandler();
-        this.group = new NioEventLoopGroup();
+    public DataClientPipelineHandler(DataClientHandler dataClientHandler) {
+        this.dataClientHandler = dataClientHandler;
     }
+    @Override
+    protected void initChannel(SocketChannel channel) throws Exception {
 
-    public void connect() {
-        Bootstrap b = new Bootstrap();
-        b.group(group)
-                .channel(NioSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .handler(new DataClientPipelineHandler(dataClientHandler));
     }
-
-    public void shutdown() {
-        group.shutdownGracefully();
-    }
-
 }

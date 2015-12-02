@@ -16,6 +16,7 @@ Apache License V2.0
 First of all, you must have Jerasure2.0 installed and GF-Complete installed (or compiled) in order to use Jerasure.  
 
 The details are as follows:  
+
 1. Install GF-Complete  
 See http://jerasure.org/jerasure/gf-complete for GF-Complete.  
 Please make sure autoconf,automake and libtool have been installed,you can refer to https://ruby-china.org/topics/2434   

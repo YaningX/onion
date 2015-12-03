@@ -17,11 +17,28 @@
  */
 package com.onion.worker;
 
+import com.onion.worker.net.BlockReadRequest;
+import com.onion.worker.net.BlockWriteRequest;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Handle the request from master.
  */
-public class DataServerHandler extends ChannelHandlerAdapter {
+@ChannelHandler.Sharable
+public class DataServerHandler extends SimpleChannelInboundHandler {
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        ctx.write(msg);
+    }
 
+    private void handleBlockReadRequest(ChannelHandlerContext ctx, BlockReadRequest readRequest) {
+
+    }
+
+    private void handleBlockWriteRequest(ChannelHandlerContext ctx, BlockWriteRequest writeRequest) {
+
+    }
 }

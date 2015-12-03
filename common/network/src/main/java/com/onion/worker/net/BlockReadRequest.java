@@ -19,6 +19,16 @@ package com.onion.worker.net;
 
 public class BlockReadRequest {
     private long blockId;
-    private long blockSize;
     private long offSet;
+    private long length;
+
+    public BlockReadRequest(long blockId, long offSet, int length) {
+        this.blockId = blockId;
+        this.offSet = offSet;
+        this.length = length;
+    }
+
+    public static BlockReadRequest decode() {
+
+    }
 }

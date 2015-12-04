@@ -15,46 +15,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.net;
+package com.onion.network.protocol;
 
+
+import com.google.common.primitives.Longs;
 import io.netty.buffer.ByteBuf;
 
-public class RPCBlockReadRequest extends RPCRequest {
-    private long blockId;
-    private long offSet;
-    private long length;
+public class RPCBlockWriteRequest extends RPCRequest {
+    private final long sessionId;
+    private final long blockId;
+    private final long offSet;
+    private final long length;
 
-    public RPCBlockReadRequest(long blockId, long offSet, long length) {
+
+
+    public RPCBlockWriteRequest(long sessionId, long blockId, long offSet, long length) {
+        this.sessionId = sessionId;
         this.blockId = blockId;
         this.offSet = offSet;
         this.length = length;
     }
 
-    /**
-     * Decodes the input {@link ByteBuf} into a {@link RPCBlockReadRequest} object and returns it.
-     * @param in the input {@link ByteBuf}
-     * @return The decoded RPCBlockReadRequest object
-     */
-    public static RPCBlockReadRequest decode(ByteBuf in) {
+    @Override
+    public Type getType() {
+        return Type.RPC_BLOCK_WRITE_REQUEST;
+    }
+
+    public static RPCBlockWriteRequest decode(ByteBuf in) {
+        long sessionId = in.readLong();
         long blockId = in.readLong();
         long offSet = in.readLong();
         long length = in.readLong();
-        return new RPCBlockReadRequest(blockId, offSet, length);
+        return new RPCBlockWriteRequest(sessionId, blockId, offSet, length);
     }
 
     public int getEncodedLength() {
-        return 0;
+        return Longs.BYTES * 4;
     }
 
     public void encode(ByteBuf out) {
+        out.writeLong(sessionId);
         out.writeLong(blockId);
         out.writeLong(offSet);
         out.writeLong(length);
     }
 
-    @Override
-    public String toString() {
-        return "RPCBlockReadRequest(" + blockId + ", " + offSet + ", " + length + ")";
+    public long getSessionId() {
+        return sessionId;
     }
 
     public long getBlockId() {
@@ -67,10 +74,5 @@ public class RPCBlockReadRequest extends RPCRequest {
 
     public long getOffSet() {
         return offSet;
-    }
-
-    @Override
-    public Type getType() {
-        return Type.RPC_BLOCK_READ_REQUEST;
     }
 }

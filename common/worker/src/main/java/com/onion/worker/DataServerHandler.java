@@ -17,9 +17,9 @@
  */
 package com.onion.worker;
 
-import com.onion.net.RPCBlockReadRequest;
-import com.onion.net.RPCRequest;
-import com.onion.net.RPCBlockWriteRequest;
+import com.onion.network.protocol.RPCBlockReadRequest;
+import com.onion.network.protocol.RPCRequest;
+import com.onion.network.protocol.RPCBlockWriteRequest;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

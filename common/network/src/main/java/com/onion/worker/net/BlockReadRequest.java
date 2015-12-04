@@ -17,18 +17,51 @@
  */
 package com.onion.worker.net;
 
+import io.netty.buffer.ByteBuf;
+
 public class BlockReadRequest {
     private long blockId;
     private long offSet;
     private long length;
 
-    public BlockReadRequest(long blockId, long offSet, int length) {
+    public BlockReadRequest(long blockId, long offSet, long length) {
         this.blockId = blockId;
         this.offSet = offSet;
         this.length = length;
     }
 
-    public static BlockReadRequest decode() {
+    /**
+     * Decodes the input {@link ByteBuf} into a {@link BlockReadRequest} object and returns it.
+     * @param in the input {@link ByteBuf}
+     * @return The decoded BlockReadRequest object
+     */
+    public static BlockReadRequest decode(ByteBuf in) {
+        long blockId = in.readLong();
+        long offSet = in.readLong();
+        long length = in.readLong();
+        return new BlockReadRequest(blockId, offSet, length);
+    }
 
+    public void encode(ByteBuf out) {
+        out.writeLong(blockId);
+        out.writeLong(offSet);
+        out.writeLong(length);
+    }
+
+    @Override
+    public String toString() {
+        return "RPCBlockReadRequest(" + blockId + ", " + offSet + ", " + length + ")";
+    }
+
+    public long getBlockId() {
+        return blockId;
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public long getOffSet() {
+        return offSet;
     }
 }

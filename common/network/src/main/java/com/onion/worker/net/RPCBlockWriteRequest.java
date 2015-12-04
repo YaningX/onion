@@ -18,5 +18,61 @@
 package com.onion.worker.net;
 
 
+import com.google.common.primitives.Longs;
+import io.netty.buffer.ByteBuf;
+
 public class RPCBlockWriteRequest extends RPCRequest {
+    private final long sessionId;
+    private final long blockId;
+    private final long offSet;
+    private final long length;
+
+
+
+    public RPCBlockWriteRequest(long sessionId, long blockId, long offSet, long length) {
+        this.sessionId = sessionId;
+        this.blockId = blockId;
+        this.offSet = offSet;
+        this.length = length;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RPC_BLOCK_WRITE_REQUEST;
+    }
+
+    public static RPCBlockWriteRequest decode(ByteBuf in) {
+        long sessionId = in.readLong();
+        long blockId = in.readLong();
+        long offSet = in.readLong();
+        long length = in.readLong();
+        return new RPCBlockWriteRequest(sessionId, blockId, offSet, length);
+    }
+
+    public int getEncodedLength() {
+        return Longs.BYTES * 4;
+    }
+
+    public void encode(ByteBuf out) {
+        out.writeLong(sessionId);
+        out.writeLong(blockId);
+        out.writeLong(offSet);
+        out.writeLong(length);
+    }
+
+    public long getSessionId() {
+        return sessionId;
+    }
+
+    public long getBlockId() {
+        return blockId;
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public long getOffSet() {
+        return offSet;
+    }
 }

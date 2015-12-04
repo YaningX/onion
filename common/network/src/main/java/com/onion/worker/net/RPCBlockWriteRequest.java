@@ -18,5 +18,5 @@
 package com.onion.worker.net;
 
 
-public class RPCBlockWriteRequest extends RPCBlockRequest {
+public class RPCBlockWriteRequest extends RPCRequest {
 }

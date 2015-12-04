@@ -19,7 +19,7 @@ package com.onion.worker.net;
 
 import io.netty.buffer.ByteBuf;
 
-public class RPCBlockReadRequest extends RPCBlockRequest {
+public class RPCBlockReadRequest extends RPCRequest {
     private long blockId;
     private long offSet;
     private long length;
@@ -40,6 +40,10 @@ public class RPCBlockReadRequest extends RPCBlockRequest {
         long offSet = in.readLong();
         long length = in.readLong();
         return new RPCBlockReadRequest(blockId, offSet, length);
+    }
+
+    public int getEncodedLength() {
+        return 0;
     }
 
     public void encode(ByteBuf out) {
@@ -63,5 +67,10 @@ public class RPCBlockReadRequest extends RPCBlockRequest {
 
     public long getOffSet() {
         return offSet;
+    }
+
+    @Override
+    public Type getType() {
+        return null;
     }
 }

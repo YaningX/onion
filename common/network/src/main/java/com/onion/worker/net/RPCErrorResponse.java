@@ -17,6 +17,46 @@
  */
 package com.onion.worker.net;
 
-public class RPCErrorResponse {
+import com.google.common.primitives.Shorts;
+import io.netty.buffer.ByteBuf;
 
+public class RPCErrorResponse extends RPCResponse{
+    private final Status mStatus;
+
+    public RPCErrorResponse(Status status) {
+        mStatus = status;
+    }
+
+    /**
+     * Decodes the input {@link ByteBuf} into a {@link RPCErrorResponse} object and returns it.
+     *
+     * @param in The input {@link ByteBuf}
+     * @return The decoded RPCErrorResponse object
+     */
+    public static RPCErrorResponse decode(ByteBuf in) {
+        return new RPCErrorResponse(Status.fromShort(in.readShort()));
+    }
+
+    public void encode(ByteBuf out) {
+        out.writeShort(mStatus.getId());
+    }
+
+    public int getEncodedLength() {
+        // 1 short (mStatus)
+        return Shorts.BYTES;
+    }
+
+    public Status getStatus() {
+        return mStatus;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.RPC_ERROR_RESPONSE;
+    }
+
+    @Override
+    public String toString() {
+        return "RPCErrorResponse(" + mStatus + ")";
+    }
 }

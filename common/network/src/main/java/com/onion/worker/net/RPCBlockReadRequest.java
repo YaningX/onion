@@ -71,6 +71,6 @@ public class RPCBlockReadRequest extends RPCRequest {
 
     @Override
     public Type getType() {
-        return null;
+        return Type.RPC_BLOCK_READ_REQUEST;
     }
 }

@@ -48,4 +48,21 @@ public class RPCBlockReadResponse extends RPCResponse {
         out.writeLong(status.getId());
     }
 
+    @Override
+    public String toString() {
+        return "RPCBlockReadResponse(" + blockId + ", " + offSet
+                + ", " + length + ", " + status + ")";
+    }
+
+    public long getBlockId() {
+        return blockId;
+    }
+
+    public long getLength() {
+        return length;
+    }
+
+    public long getOffSet() {
+        return offSet;
+    }
 }

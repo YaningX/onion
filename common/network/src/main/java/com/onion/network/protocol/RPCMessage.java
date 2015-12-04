@@ -20,6 +20,7 @@ package com.onion.network.protocol;
 
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import com.onion.network.databuffer.DataBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -94,6 +95,25 @@ public abstract class RPCMessage implements EncodedMessage {
      * Validate the message. Throws an Exception if the message is invalid.
      */
     public void validate() {}
+
+    /**
+     * Returns true if the message has a payload. The encoder will send the payload with a more
+     * efficient method.
+     *
+     * @return true if the message has a payload, false otherwise
+     */
+    public boolean hasPayload() {
+        return getPayloadDataBuffer() != null;
+    }
+
+    /**
+     * Returns the data buffer of the payload.
+     *
+     * @return The DataBuffer representing the payload
+     */
+    public DataBuffer getPayloadDataBuffer() {
+        return null;
+    }
 
     /**
      * Creates a decoder that splits up the incoming ByteBuf into new ByteBuf's according to a length

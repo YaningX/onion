@@ -42,6 +42,10 @@ public class RPCBlockReadResponse extends RPCResponse {
     }
 
     public void encode(ByteBuf out) {
-
+        out.writeLong(blockId);
+        out.writeLong(offSet);
+        out.writeLong(length);
+        out.writeLong(status.getId());
     }
+
 }

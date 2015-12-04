@@ -17,6 +17,8 @@
  */
 package com.onion.worker.net;
 
+import io.netty.buffer.ByteBuf;
+
 public class RPCBlockReadResponse extends RPCResponse {
     private final long blockId;
     private final long offSet;
@@ -31,7 +33,15 @@ public class RPCBlockReadResponse extends RPCResponse {
     }
 
     @Override
-    public RPCMessage.Type getType() {
+    public Type getType() {
         return RPCMessage.Type.RPC_BLOCK_READ_RESPONSE;
+    }
+
+    public int getEncodedLength() {
+        return 0;
+    }
+
+    public void encode(ByteBuf out) {
+
     }
 }

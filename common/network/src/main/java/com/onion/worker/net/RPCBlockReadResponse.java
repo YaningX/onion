@@ -17,6 +17,7 @@
  */
 package com.onion.worker.net;
 
+import com.google.common.base.Preconditions;
 import io.netty.buffer.ByteBuf;
 
 public class RPCBlockReadResponse extends RPCResponse {
@@ -53,6 +54,28 @@ public class RPCBlockReadResponse extends RPCResponse {
         return "RPCBlockReadResponse(" + blockId + ", " + offSet
                 + ", " + length + ", " + status + ")";
     }
+
+    /**
+     * Creates a {@link RPCBlockReadResponse} object that indicates an error for the given {@link RPCBlockReadRequest}.
+     * @param request
+     * @param status
+     * @return
+     */
+    public static RPCBlockReadResponse createErrorResponse(final RPCBlockReadRequest request,
+                                                           final Status status) {
+        Preconditions.checkArgument(status != Status.SUCCESS);
+        // The response has no payload, so length must be 0.
+        return new RPCBlockReadResponse(request.getBlockId(), request.getOffSet(), 0, status);
+    }
+
+    public static RPCBlockReadResponse decode(ByteBuf in) {
+        long blockId = in.readLong();
+        long offset = in.readLong();
+        long length = in.readLong();
+        short status = in.readShort();
+        return new RPCBlockReadResponse(blockId, offset, length, Status.fromShort(status));
+    }
+
 
     public long getBlockId() {
         return blockId;

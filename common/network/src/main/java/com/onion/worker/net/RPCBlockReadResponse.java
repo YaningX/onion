@@ -32,6 +32,6 @@ public class RPCBlockReadResponse extends RPCResponse {
 
     @Override
     public RPCMessage.Type getType() {
-        return RPCMessage.Type.RPC_BLOCK_READ_RESPONSE
+        return RPCMessage.Type.RPC_BLOCK_READ_RESPONSE;
     }
 }

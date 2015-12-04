@@ -20,6 +20,7 @@ package com.onion.eclib;
 import com.sun.jna.Pointer;
 
 public class CauchyGoodRSCoder extends AbstractErasureCoder {
+ 
     private int packetSize;
     private int[] bitMatrix;
 

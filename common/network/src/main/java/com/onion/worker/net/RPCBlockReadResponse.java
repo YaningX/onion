@@ -17,6 +17,21 @@
  */
 package com.onion.worker.net;
 
-public class RPCBlockReadResponse {
+public class RPCBlockReadResponse extends RPCResponse {
+    private final long blockId;
+    private final long offSet;
+    private final long length;
+    private final Status status;
 
+    public RPCBlockReadResponse(long blockId, long offSet, long length, Status status) {
+        this.blockId = blockId;
+        this.offSet = offSet;
+        this.length = length;
+        this.status = status;
+    }
+
+    @Override
+    public RPCMessage.Type getType() {
+        return RPCMessage.Type.RPC_BLOCK_READ_RESPONSE
+    }
 }

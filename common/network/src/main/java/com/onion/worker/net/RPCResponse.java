@@ -20,7 +20,7 @@ package com.onion.worker.net;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RPCResponse {
+public abstract class RPCResponse {
     // The possible types of status for RPC responses.
     public enum Status {
         // Success.

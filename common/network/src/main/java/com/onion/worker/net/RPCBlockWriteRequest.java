@@ -17,6 +17,6 @@
  */
 package com.onion.worker.net;
 
-public class ErrorResponse {
 
+public class RPCBlockWriteRequest extends RPCBlockRequest {
 }

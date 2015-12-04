@@ -17,6 +17,5 @@
  */
 package com.onion.worker.net;
 
-public class BlockReadResponse {
-
+public class RPCBlockWriteResponse {
 }

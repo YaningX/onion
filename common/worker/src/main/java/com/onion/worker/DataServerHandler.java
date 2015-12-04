@@ -17,10 +17,10 @@
  */
 package com.onion.worker;
 
-import com.onion.worker.net.BlockReadRequest;
-import com.onion.worker.net.BlockWriteRequest;
+import com.onion.worker.net.RPCBlockReadRequest;
+import com.onion.worker.net.RPCBlockRequest;
+import com.onion.worker.net.RPCBlockWriteRequest;
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -28,17 +28,17 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * Handle the request from master.
  */
 @ChannelHandler.Sharable
-public class DataServerHandler extends SimpleChannelInboundHandler {
+public class DataServerHandler extends SimpleChannelInboundHandler<RPCBlockRequest> {
+
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Object msg) {
-        ctx.write(msg);
+    public void channelRead0(ChannelHandlerContext ctx, final RPCBlockRequest msg) {
     }
 
-    private void handleBlockReadRequest(ChannelHandlerContext ctx, BlockReadRequest readRequest) {
+    private void handleBlockReadRequest(ChannelHandlerContext ctx, RPCBlockReadRequest readRequest) {
 
     }
 
-    private void handleBlockWriteRequest(ChannelHandlerContext ctx, BlockWriteRequest writeRequest) {
+    private void handleBlockWriteRequest(ChannelHandlerContext ctx, RPCBlockWriteRequest writeRequest) {
 
     }
 }

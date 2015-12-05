@@ -19,21 +19,28 @@ package com.onion.network.protocol;
 
 
 import com.google.common.primitives.Longs;
+import com.onion.network.databuffer.DataBuffer;
+import com.onion.network.databuffer.DataByteBuffer;
 import io.netty.buffer.ByteBuf;
+
+import java.nio.ByteBuffer;
 
 public class RPCBlockWriteRequest extends RPCRequest {
     private final long sessionId;
     private final long blockId;
     private final long offSet;
     private final long length;
+    private final DataBuffer dataBuffer;
 
 
 
-    public RPCBlockWriteRequest(long sessionId, long blockId, long offSet, long length) {
+    public RPCBlockWriteRequest(long sessionId, long blockId, long offSet,
+                                long length, DataBuffer dataBuffer) {
         this.sessionId = sessionId;
         this.blockId = blockId;
         this.offSet = offSet;
         this.length = length;
+        this.dataBuffer = dataBuffer;
     }
 
     @Override
@@ -46,7 +53,13 @@ public class RPCBlockWriteRequest extends RPCRequest {
         long blockId = in.readLong();
         long offSet = in.readLong();
         long length = in.readLong();
-        return new RPCBlockWriteRequest(sessionId, blockId, offSet, length);
+        DataBuffer dataBuffer = null;
+        if (length > 0) {
+            ByteBuffer buffer = ByteBuffer.allocate((int) length);
+            in.readBytes(buffer);
+            dataBuffer = new DataByteBuffer(buffer, (int) length);
+        }
+        return new RPCBlockWriteRequest(sessionId, blockId, offSet, length, dataBuffer);
     }
 
     public int getEncodedLength() {

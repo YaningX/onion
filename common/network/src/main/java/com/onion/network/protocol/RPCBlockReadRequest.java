@@ -17,6 +17,8 @@
  */
 package com.onion.network.protocol;
 
+import com.google.common.base.Preconditions;
+import com.google.common.primitives.Longs;
 import io.netty.buffer.ByteBuf;
 
 public class RPCBlockReadRequest extends RPCRequest {
@@ -43,13 +45,21 @@ public class RPCBlockReadRequest extends RPCRequest {
     }
 
     public int getEncodedLength() {
-        return 0;
+        // 3 longs (mBLockId, mOffset, mLength)
+        return Longs.BYTES * 3;
     }
 
     public void encode(ByteBuf out) {
         out.writeLong(blockId);
         out.writeLong(offSet);
         out.writeLong(length);
+    }
+
+    @Override
+    public void validate() {
+        Preconditions.checkState(offSet >= 0, "Offset cannot be negative: %s", offSet);
+        Preconditions.checkState(length >= 0 || length == -1,
+                "Length cannot be negative (except for -1): %s", length);
     }
 
     @Override

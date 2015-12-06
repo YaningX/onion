@@ -22,4 +22,5 @@ package com.onion.network.protocol;
  * This test just helps us implement network module.
  */
 public class MiniOnionTest {
+
 }

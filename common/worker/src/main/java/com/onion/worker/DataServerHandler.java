@@ -17,9 +17,7 @@
  */
 package com.onion.worker;
 
-import com.onion.network.protocol.RPCBlockReadRequest;
-import com.onion.network.protocol.RPCRequest;
-import com.onion.network.protocol.RPCBlockWriteRequest;
+import com.onion.network.protocol.*;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -32,10 +30,31 @@ public class DataServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, final RPCRequest msg) {
-
+        switch (msg.getType()) {
+            case RPC_BLOCK_READ_REQUEST:
+                handleBlockReadRequest(ctx, (RPCBlockReadRequest) msg);
+                break;
+            case RPC_BLOCK_WRITE_REQUEST:
+                handleBlockWriteRequest(ctx, (RPCBlockWriteRequest) msg);
+                break;
+            default:
+                RPCErrorResponse resp = new RPCErrorResponse(RPCResponse.Status.UNKNOWN_MESSAGE_ERROR);
+                ctx.writeAndFlush(resp);
+                throw new IllegalArgumentException(
+                        "No handler implementation for rpc msg type: " + msg.getType());
+        }
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+    }
+
+
     private void handleBlockReadRequest(ChannelHandlerContext ctx, RPCBlockReadRequest readRequest) {
+        final long blockId = readRequest.getBlockId();
+        final long offSet = readRequest.getOffSet();
+        final long len = readRequest.getLength();
 
     }
 

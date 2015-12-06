@@ -58,7 +58,7 @@ public class DataServer {
                 .option(ChannelOption.SO_BACKLOG, 100)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new DataServerPipelineHandler(serverHandler));
-      //  channelFuture = bootstrap.bind(tcpAddress.getPort()).sync();
+        channelFuture = bootstrap.bind(tcpAddress.getPort()).sync();
     }
 
 

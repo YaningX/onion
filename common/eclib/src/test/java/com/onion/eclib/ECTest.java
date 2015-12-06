@@ -204,6 +204,7 @@ public class ECTest {
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
+
     @Test
     public void CauchyRSCoder() throws IOException {
         this.k = 6;
@@ -217,6 +218,7 @@ public class ECTest {
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
+
     @Test
     public void  CauchyGoodRSCoder() throws IOException {
         this.k = 6;

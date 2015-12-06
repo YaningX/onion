@@ -19,6 +19,7 @@
 package com.onion.eclib;
 
 import com.google.common.base.Preconditions;
+import com.google.common.io.Closer;
 import org.junit.Test;
 
 import java.io.*;

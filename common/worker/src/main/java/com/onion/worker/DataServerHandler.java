@@ -17,11 +17,29 @@
  */
 package com.onion.worker;
 
-import io.netty.channel.ChannelHandlerAdapter;
+import com.onion.network.protocol.RPCBlockReadRequest;
+import com.onion.network.protocol.RPCRequest;
+import com.onion.network.protocol.RPCBlockWriteRequest;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Handle the request from master.
  */
-public class DataServerHandler extends ChannelHandlerAdapter {
+@ChannelHandler.Sharable
+public class DataServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
 
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, final RPCRequest msg) {
+
+    }
+
+    private void handleBlockReadRequest(ChannelHandlerContext ctx, RPCBlockReadRequest readRequest) {
+
+    }
+
+    private void handleBlockWriteRequest(ChannelHandlerContext ctx, RPCBlockWriteRequest writeRequest) {
+
+    }
 }

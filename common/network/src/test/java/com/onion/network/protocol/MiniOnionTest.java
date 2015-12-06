@@ -15,7 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.worker.net;
+package com.onion.network.protocol;
 
-public class BlockWriteResponse {
+/**
+ * This test simulate the ecoding and decoding process, and communication between a simple client/server bootstrap connection.
+ * This test just helps us implement network module.
+ */
+public class MiniOnionTest {
 }

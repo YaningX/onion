@@ -39,13 +39,9 @@ public class RPCMessageDecoder extends MessageToMessageDecoder<ByteBuf> {
 
     @Override
     public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-      /**  RPCMessage.Type type = RPCMessage.Type.decode(in);
+        RPCMessage.Type type = RPCMessage.Type.decode(in);
         RPCMessage message = RPCMessage.decodeMessage(type, in);
-        out.add(message);*/
-        if (in.readableBytes() < 100) {
-            return;
-        }
-        out.add(in.readBytes(100));
+        out.add(message);
     }
 
     @Override

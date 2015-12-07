@@ -39,7 +39,7 @@ public final class DataServerPipelineHandler extends ChannelInitializer<SocketCh
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast("framedecoder", new LengthFieldBasedFrameDecoder(1024 * 1024 *1024, 0, 4, 0, 4));
+        pipeline.addLast("framedecoder", new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024, 0, 4, 0, 4));
         pipeline.addLast(mDataServerHandler);
     }
 }

@@ -88,4 +88,8 @@ public class RPCBlockWriteRequest extends RPCRequest {
     public long getOffSet() {
         return offSet;
     }
+
+    public DataBuffer getPayloadDataBuffer() {
+        return dataBuffer;
+    }
 }

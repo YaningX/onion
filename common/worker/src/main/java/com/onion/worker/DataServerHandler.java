@@ -18,16 +18,22 @@
 package com.onion.worker;
 
 import com.onion.network.protocol.*;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 /**
  * Handle the request from master.
  */
 @ChannelHandler.Sharable
-public class DataServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
-
+public class DataServerHandler extends SimpleChannelInboundHandler {
+/**
     @Override
     public void channelRead0(ChannelHandlerContext ctx, final RPCRequest msg) {
         switch (msg.getType()) {
@@ -43,7 +49,7 @@ public class DataServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
                 throw new IllegalArgumentException(
                         "No handler implementation for rpc msg type: " + msg.getType());
         }
-    }
+    }*/
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
@@ -59,6 +65,17 @@ public class DataServerHandler extends SimpleChannelInboundHandler<RPCRequest> {
     }
 
     private void handleBlockWriteRequest(ChannelHandlerContext ctx, RPCBlockWriteRequest writeRequest) {
+        final long sessionId = writeRequest.getSessionId();
+        final long blockId = writeRequest.getBlockId();
+    }
 
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ByteBuf byteBuf = (ByteBuf) msg;
+        byte[] msgBytes = new byte[byteBuf.readableBytes()];
+        byteBuf.readBytes(msgBytes);
+        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/backup.xml", "rw");
+        file.write(msgBytes);
+        file.close();
     }
 }

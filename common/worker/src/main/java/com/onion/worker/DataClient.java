@@ -17,44 +17,6 @@
  */
 package com.onion.worker;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.net.InetSocketAddress;
-
 public class DataClient {
-    private EventLoopGroup group;
-    private InetSocketAddress tcpAddress;
-    private DataClientHandler dataClientHandler;
-
-    public DataClient(InetSocketAddress tcpAddress) {
-        this.tcpAddress = tcpAddress;
-        this.dataClientHandler = new DataClientHandler();
-        this.group = new NioEventLoopGroup();
-    }
-
-    public void connect() throws InterruptedException {
-        Bootstrap b = new Bootstrap();
-        b.group(group)
-                .channel(NioSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
-                .handler(new DataClientPipelineHandler(dataClientHandler));
-        ChannelFuture future = b.connect(tcpAddress);
-        future.channel().close().sync();
-    }
-
-    public void shutdown() {
-        group.shutdownGracefully();
-    }
-
-    public static void main(String[] strings) throws InterruptedException {
-        InetSocketAddress tcpAddress = new InetSocketAddress("127.0.0.1", 8007);
-        DataClient client = new DataClient(tcpAddress);
-        client.connect();
-    }
 
 }

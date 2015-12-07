@@ -19,11 +19,8 @@
 package com.onion.eclib;
 
 import com.google.common.base.Preconditions;
-<<<<<<< HEAD
 import org.junit.Before;
-=======
 import com.google.common.io.Closer;
->>>>>>> origin/master
 import org.junit.Test;
 
 import java.io.*;

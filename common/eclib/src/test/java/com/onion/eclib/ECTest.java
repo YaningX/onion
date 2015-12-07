@@ -19,6 +19,7 @@
 package com.onion.eclib;
 
 import com.google.common.base.Preconditions;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
@@ -114,6 +115,7 @@ public class ECTest {
         outputStream.write(newData[i], 0, origSize - writeSize);
         outputStream.close();
     }
+
     private int[] generateRadomArray(int ArrayLen) {
         int[] randomArray = new int[ArrayLen];
         List<Integer> list = new ArrayList<Integer>(k + m);
@@ -184,7 +186,6 @@ public class ECTest {
         outputStream.close();
     }
 
-
     private void readFile(byte[] data, File file) throws IOException {
         InputStream inputStream = new FileInputStream(file);
         inputStream.read(data);
@@ -204,6 +205,7 @@ public class ECTest {
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
+
     @Test
     public void CauchyRSCoder() throws IOException {
         this.k = 6;
@@ -217,6 +219,7 @@ public class ECTest {
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
+
     @Test
     public void  CauchyGoodRSCoder() throws IOException {
         this.k = 6;
@@ -230,5 +233,4 @@ public class ECTest {
         File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
         runWith(backupDir, oriFile);
     }
-    
 }

@@ -37,7 +37,6 @@ public class RPCBlockWriteResponse extends RPCResponse {
         this.status = status;
     }
 
-
     /**
      * Creates a {@link RPCBlockWriteResponse} object that indicates an error for the given.
      * @param request

@@ -20,22 +20,26 @@ package com.onion.worker;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 
 /**
  * Adds the block server's pipeline into the channel.
  */
 public final class DataServerPipelineHandler extends ChannelInitializer<SocketChannel> {
+    private final RPCMessageDecoder decoder;
     private final DataServerHandler mDataServerHandler;
 
     public DataServerPipelineHandler(final DataServerHandler handler) {
         this.mDataServerHandler = handler;
+        this.decoder = new RPCMessageDecoder();
     }
 
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast("framedecoder", new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024, 0, 4, 0, 4));
         pipeline.addLast(mDataServerHandler);
     }
 }

@@ -62,7 +62,7 @@ public class ECTest {
         readFile(wholeData, oriFile);
         Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
         for (int i = 0; i < k; i++) {
-            System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
+             System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
         }
 
         /**
@@ -87,7 +87,7 @@ public class ECTest {
         /**
          * Delete some files
          */
-        deleteFile(generateRadomArray(m), backupDir, oriFile);
+        deleteFile( generateRadomArray(m), backupDir, oriFile);
 
         byte[][] newData = new byte[k][blockSize];
         byte[][] newParity = new byte[m][blockSize];

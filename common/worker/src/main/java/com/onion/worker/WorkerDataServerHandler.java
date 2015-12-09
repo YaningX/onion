@@ -30,6 +30,7 @@ import tachyon.worker.block.io.BlockReader;
 import tachyon.worker.block.io.BlockWriter;
 import tachyon.worker.block.io.LocalFileBlockWriter;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -38,9 +39,10 @@ import java.nio.channels.FileChannel;
 @ChannelHandler.Sharable
 public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<RPCMessage> {
     private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
+    private File backendDir;
 
-    public WorkerDataServerHandler() {
-
+    public WorkerDataServerHandler(String backendDir) {
+        this.backendDir = new File(Preconditions.checkNotNull(backendDir));
     }
 
     @Override
@@ -84,8 +86,13 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
         final DataBuffer data = req.getPayloadDataBuffer();
 
         BlockWriter blockWriter = null;
+
+        if (!backendDir.exists() && backendDir.mkdirs()) {
+            throw new IOException("Backend directory does not exist");
+        }
+
         try {
-            blockWriter = new LocalFileBlockWriter(System.getProperty("user.dir") + "/target/" + blockId);
+            blockWriter = new LocalFileBlockWriter(backendDir.getAbsolutePath() + "/" + blockId);
             req.validate();
             ByteBuffer buffer = data.getReadOnlyByteBuffer();
             blockWriter.append(buffer);

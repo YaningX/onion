@@ -35,9 +35,10 @@ public final class WorkerDataServer {
     private final WorkerDataServerHandler mWorkerDataServerHandler;
 
 
-    public WorkerDataServer(final InetSocketAddress address) {
+    public WorkerDataServer(final InetSocketAddress address,
+                            final String backendDir) {
         mWorkerDataServerHandler =
-                new WorkerDataServerHandler();
+                new WorkerDataServerHandler(backendDir);
         mBootstrap = createServerBootstrap().childHandler(new PipelineHandler(mWorkerDataServerHandler));
 
         try {

@@ -60,8 +60,8 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
   @Override
   public void open(InetSocketAddress address, long blockId, long sessionId) throws IOException {
     if (mOpen) {
-      throw new IOException(
-          ExceptionMessage.WRITER_ALREADY_OPEN.getMessage(mAddress, mBlockId, mSessionId));
+      throw new IOException();
+        //  ExceptionMessage.WRITER_ALREADY_OPEN.getMessage(mAddress, mBlockId, mSessionId));
     }
     mAddress = address;
     mBlockId = blockId;
@@ -100,8 +100,8 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
           LOG.info("status: {} from remote machine {} received", status, mAddress);
 
           if (status != RPCResponse.Status.SUCCESS) {
-            throw new IOException(ExceptionMessage.BLOCK_WRITE_ERROR.getMessage(mBlockId,
-                mSessionId, mAddress, status.getMessage()));
+       //     throw new IOException(ExceptionMessage.BLOCK_WRITE_ERROR.getMessage(mBlockId,
+        //        mSessionId, mAddress, status.getMessage()));
           }
           mWrittenBytes += length;
           break;
@@ -109,8 +109,7 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
           RPCErrorResponse error = (RPCErrorResponse) response;
           throw new IOException(error.getStatus().getMessage());
         default:
-          throw new IOException(ExceptionMessage.UNEXPECTED_RPC_RESPONSE
-              .getMessage(response.getType(), RPCMessage.Type.RPC_BLOCK_WRITE_RESPONSE));
+          throw new IOException();
       }
     } catch (Exception e) {
       throw new IOException(e);
@@ -119,12 +118,4 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
     }
   }
 
-    public static void main(String[] strings) throws IOException {
-        RemoteBlockWriter writer = new NettyRemoteBlockWriter();
-        writer.open(new InetSocketAddress("127.0.0.1", 29999), 100, 100);
-        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
-        byte[] sendData = new byte[(int) file.length()];
-        file.read(sendData);
-        writer.write(sendData, 0, sendData.length);
-    }
 }

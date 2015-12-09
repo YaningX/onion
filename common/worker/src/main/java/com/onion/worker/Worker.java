@@ -12,29 +12,46 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.onion.worker;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 
-import java.io.Closeable;
+import java.io.File;
+import java.net.InetSocketAddress;
 
-/**
- * A listener that will close the given resource when the operation completes. This class accepts
- * null resources.
- */
-final class ClosableResourceChannelListener implements ChannelFutureListener {
-  private final Closeable mResource;
+public class Worker {
+    private InetSocketAddress workerAddress;
+    private WorkerConf workerConf;
+    private String backendDir;
+    private WorkerDataServer workerDataServer;
 
-  ClosableResourceChannelListener(Closeable resource) {
-    mResource = resource;
-  }
-
-  @Override
-  public void operationComplete(ChannelFuture future) throws Exception {
-    if (mResource != null) {
-      mResource.close();
+    public Worker(WorkerConf workerConf) {
+        this.workerConf = workerConf;
     }
-  }
+
+
+    /**
+     * Construct a Worker from a configuration file
+     * @param confDir
+     */
+    public Worker(File confDir) {
+
+    }
+
+    public Worker(InetSocketAddress workerAddress, String backendDir) {
+        this.workerAddress = workerAddress;
+        this.backendDir = backendDir;
+        this.workerDataServer = new WorkerDataServer(workerAddress, backendDir);
+    }
+
+    public static void main(String[] args) {
+
+    }
+
+    public void process(String[] args) {
+
+    }
+
+    public void process() {
+
+    }
 }

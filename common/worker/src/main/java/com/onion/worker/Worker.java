@@ -15,10 +15,43 @@
 package com.onion.worker;
 
 
+import java.io.File;
 import java.net.InetSocketAddress;
 
 public class Worker {
-    private WorkerDataServer workerDataServer;
     private InetSocketAddress workerAddress;
+    private WorkerConf workerConf;
+    private String backendDir;
+    private WorkerDataServer workerDataServer;
 
+    public Worker(WorkerConf workerConf) {
+        this.workerConf = workerConf;
+    }
+
+
+    /**
+     * Construct a Worker from a configuration file
+     * @param confDir
+     */
+    public Worker(File confDir) {
+
+    }
+
+    public Worker(InetSocketAddress workerAddress, String backendDir) {
+        this.workerAddress = workerAddress;
+        this.backendDir = backendDir;
+        this.workerDataServer = new WorkerDataServer(workerAddress, backendDir);
+    }
+
+    public static void main(String[] args) {
+
+    }
+
+    public void process(String[] args) {
+
+    }
+
+    public void process() {
+
+    }
 }

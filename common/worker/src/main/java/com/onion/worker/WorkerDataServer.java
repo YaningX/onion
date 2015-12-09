@@ -22,16 +22,14 @@ import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.ServerChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import tachyon.Constants;
 import tachyon.conf.TachyonConf;
 import tachyon.network.ChannelType;
-import tachyon.util.network.NettyUtils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Runs a netty data server that responses to block requests.
@@ -48,7 +46,7 @@ public final class WorkerDataServer {
         mTachyonConf = Preconditions.checkNotNull(tachyonConf);
         mWorkerDataServerHandler =
                 new WorkerDataServerHandler();
-        mBootstrap = createBootstrap().childHandler(new PipelineHandler(mWorkerDataServerHandler));
+        mBootstrap = createServerBootstrap().childHandler(new PipelineHandler(mWorkerDataServerHandler));
 
         try {
             mChannelFuture = mBootstrap.bind(address).sync();
@@ -63,10 +61,10 @@ public final class WorkerDataServer {
     mBootstrap.childGroup().shutdownGracefully();
   }
 
-  private ServerBootstrap createBootstrap() {
+  private ServerBootstrap createServerBootstrap() {
     final ServerBootstrap boot =
-        createBootstrapOfType(mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_CHANNEL,
-            ChannelType.class));
+        createServerBootstrap(mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_CHANNEL,
+                ChannelType.class));
 
     // use pooled buffers
     boot.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
@@ -74,11 +72,9 @@ public final class WorkerDataServer {
 
     // set write buffer
     // this is the default, but its recommended to set it in case of change in future netty.
-    boot.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK,
-        (int) mTachyonConf.getBytes(Constants.WORKER_NETWORK_NETTY_WATERMARK_HIGH));
-    boot.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK,
-        (int) mTachyonConf.getBytes(Constants.WORKER_NETWORK_NETTY_WATERMARK_LOW));
-      
+    boot.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32768);
+    boot.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8192);
+
     return boot;
   }
 
@@ -109,15 +105,12 @@ public final class WorkerDataServer {
    * @param type the channel type. Current channel types supported are nio and epoll
    * @return an instance of ServerBootstrap
    */
-  private ServerBootstrap createBootstrapOfType(final ChannelType type) {
+  private ServerBootstrap createServerBootstrap(final ChannelType type) {
     final ServerBootstrap boot = new ServerBootstrap();
     // If number of worker threads is 0, Netty creates (#processors * 2) threads by default.
     final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     final EventLoopGroup workerGroup = new NioEventLoopGroup(0);
-
-    final Class<? extends ServerChannel> socketChannelClass =
-        NettyUtils.getServerChannelClass(type);
-    boot.group(bossGroup, workerGroup).channel(socketChannelClass);
+    boot.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
 
     return boot;
   }

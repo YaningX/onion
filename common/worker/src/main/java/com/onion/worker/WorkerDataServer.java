@@ -35,10 +35,10 @@ import java.net.InetSocketAddress;
  * Runs a netty data server that responses to block requests.
  */
 public final class WorkerDataServer {
-  private final ServerBootstrap mBootstrap;
-  private final ChannelFuture mChannelFuture;
-  private final TachyonConf mTachyonConf;
-  private final WorkerDataServerHandler mWorkerDataServerHandler;
+    private final ServerBootstrap mBootstrap;
+    private final ChannelFuture mChannelFuture;
+    private final TachyonConf mTachyonConf;
+    private final WorkerDataServerHandler mWorkerDataServerHandler;
 
 
     public WorkerDataServer(final InetSocketAddress address,
@@ -55,63 +55,62 @@ public final class WorkerDataServer {
         }
     }
 
-  public void close() throws IOException {
-    mChannelFuture.channel().close().awaitUninterruptibly();
-    mBootstrap.group().shutdownGracefully();
-    mBootstrap.childGroup().shutdownGracefully();
-  }
+    public void close() throws IOException {
+        mChannelFuture.channel().close().awaitUninterruptibly();
+        mBootstrap.group().shutdownGracefully();
+        mBootstrap.childGroup().shutdownGracefully();
+    }
 
-  private ServerBootstrap createServerBootstrap() {
-    final ServerBootstrap boot =
-        createServerBootstrap(mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_CHANNEL,
-                ChannelType.class));
+    private ServerBootstrap createServerBootstrap() {
+        final ServerBootstrap boot =
+                createServerBootstrap(mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_CHANNEL,
+                        ChannelType.class));
 
-    // use pooled buffers
-    boot.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
-    boot.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+        // use pooled buffers
+        boot.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+        boot.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
-    // set write buffer
-    // this is the default, but its recommended to set it in case of change in future netty.
-    boot.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32768);
-    boot.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8192);
+        // set write buffer
+        // this is the default, but its recommended to set it in case of change in future netty.
+        boot.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, 32768);
+        boot.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, 8192);
 
-    return boot;
-  }
+        return boot;
+    }
 
-  /**
-   * Gets the actual bind hostname.
-   */
-  public String getBindHost() {
-    return ((InetSocketAddress) mChannelFuture.channel().localAddress()).getHostName();
-  }
+    /**
+     * Gets the actual bind hostname.
+     */
+    public String getBindHost() {
+        return ((InetSocketAddress) mChannelFuture.channel().localAddress()).getHostName();
+    }
 
-  /**
-   * Gets the port listening on.
-   */
-  public int getPort() {
-    // Return value of io.netty.channel.Channel.localAddress() must be down-cast into types like
-    // InetSocketAddress to get detailed info such as port.
-    return ((InetSocketAddress) mChannelFuture.channel().localAddress()).getPort();
-  }
+    /**
+     * Gets the port listening on.
+     */
+    public int getPort() {
+        // Return value of io.netty.channel.Channel.localAddress() must be down-cast into types like
+        // InetSocketAddress to get detailed info such as port.
+        return ((InetSocketAddress) mChannelFuture.channel().localAddress()).getPort();
+    }
 
-  public boolean isClosed() {
-    return mBootstrap.group().isShutdown();
-  }
+    public boolean isClosed() {
+        return mBootstrap.group().isShutdown();
+    }
 
-  /**
-   * Creates a default {@link io.netty.bootstrap.ServerBootstrap} where the channel and groups are
-   * preset.
-   *
-   * @param type the channel type. Current channel types supported are nio and epoll
-   * @return an instance of ServerBootstrap
-   */
-  private ServerBootstrap createServerBootstrap(final ChannelType type) {
-    final ServerBootstrap boot = new ServerBootstrap();
-    // If number of worker threads is 0, Netty creates (#processors * 2) threads by default.
-    final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    final EventLoopGroup workerGroup = new NioEventLoopGroup(0);
-    boot.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
-
-    return boot;
-  }
+    /**
+     * Creates a default {@link io.netty.bootstrap.ServerBootstrap} where the channel and groups are
+     * preset.
+     *
+     * @param type the channel type. Current channel types supported are nio and epoll
+     * @return an instance of ServerBootstrap
+     */
+    private ServerBootstrap createServerBootstrap(final ChannelType type) {
+        final ServerBootstrap boot = new ServerBootstrap();
+        // If number of worker threads is 0, Netty creates (#processors * 2) threads by default.
+        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        final EventLoopGroup workerGroup = new NioEventLoopGroup(0);
+        boot.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
+        return boot;
+    }
 }

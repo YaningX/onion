@@ -12,32 +12,29 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.onion.io;
+
+package com.onion.worker;
+
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 
 import java.io.Closeable;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.WritableByteChannel;
 
 /**
- * A writer interface to write or update a block stored in data node.
- * <p>
- * This class does not provide thread-safety.
+ * A listener that will close the given resource when the operation completes. This class accepts
+ * null resources.
  */
-public interface BlockWriter extends Closeable {
-    /**
-     * Appends data to the end of a block from an input ByteBuffer.
-     *
-     * @param inputBuf ByteBuffer that input data is stored in
-     * @return the size of data that was appended in bytes
-     * @throws IOException if the operation fails
-     */
-    long append(ByteBuffer inputBuf) throws IOException;
+final class ClosableResourceChannelListener implements ChannelFutureListener {
+  private final Closeable mResource;
 
-    /**
-     * Returns writable byte channel to write to this block
-     *
-     * @return channel
-     */
-    WritableByteChannel getChannel();
+  ClosableResourceChannelListener(Closeable resource) {
+    mResource = resource;
+  }
+
+  @Override
+  public void operationComplete(ChannelFuture future) throws Exception {
+    if (mResource != null) {
+      mResource.close();
+    }
+  }
 }

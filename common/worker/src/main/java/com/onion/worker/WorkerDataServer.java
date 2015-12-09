@@ -15,7 +15,6 @@
 
 package com.onion.worker;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -24,26 +23,19 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import tachyon.Constants;
-import tachyon.conf.TachyonConf;
-import tachyon.network.ChannelType;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * Runs a netty data server that responses to block requests.
+ * Runs a netty worker data server that responses to block requests.
  */
 public final class WorkerDataServer {
     private final ServerBootstrap mBootstrap;
     private final ChannelFuture mChannelFuture;
-    private final TachyonConf mTachyonConf;
     private final WorkerDataServerHandler mWorkerDataServerHandler;
 
 
-    public WorkerDataServer(final InetSocketAddress address,
-                            final TachyonConf tachyonConf) {
-        mTachyonConf = Preconditions.checkNotNull(tachyonConf);
+    public WorkerDataServer(final InetSocketAddress address) {
         mWorkerDataServerHandler =
                 new WorkerDataServerHandler();
         mBootstrap = createServerBootstrap().childHandler(new PipelineHandler(mWorkerDataServerHandler));
@@ -62,9 +54,11 @@ public final class WorkerDataServer {
     }
 
     private ServerBootstrap createServerBootstrap() {
-        final ServerBootstrap boot =
-                createServerBootstrap(mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_CHANNEL,
-                        ChannelType.class));
+        final ServerBootstrap boot = new ServerBootstrap();
+        // If number of worker threads is 0, Netty creates (#processors * 2) threads by default.
+        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        final EventLoopGroup workerGroup = new NioEventLoopGroup(0);
+        boot.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
 
         // use pooled buffers
         boot.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
@@ -98,19 +92,4 @@ public final class WorkerDataServer {
         return mBootstrap.group().isShutdown();
     }
 
-    /**
-     * Creates a default {@link io.netty.bootstrap.ServerBootstrap} where the channel and groups are
-     * preset.
-     *
-     * @param type the channel type. Current channel types supported are nio and epoll
-     * @return an instance of ServerBootstrap
-     */
-    private ServerBootstrap createServerBootstrap(final ChannelType type) {
-        final ServerBootstrap boot = new ServerBootstrap();
-        // If number of worker threads is 0, Netty creates (#processors * 2) threads by default.
-        final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        final EventLoopGroup workerGroup = new NioEventLoopGroup(0);
-        boot.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class);
-        return boot;
-    }
 }

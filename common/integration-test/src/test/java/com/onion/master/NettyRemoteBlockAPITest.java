@@ -31,8 +31,7 @@ public class NettyRemoteBlockAPITest {
 
     @BeforeClass
     public static void setup() {
-        workerDataServer = new WorkerDataServer(new InetSocketAddress("127.0.0.1", 29999),
-                WorkerContext.getConf());
+        workerDataServer = new WorkerDataServer(new InetSocketAddress("127.0.0.1", 29999));
     }
 
     @AfterClass

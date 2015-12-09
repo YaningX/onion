@@ -36,16 +36,11 @@ import java.nio.channels.FileChannel;
 
 
 @ChannelHandler.Sharable
-public final class DataServerHandler extends SimpleChannelInboundHandler<RPCMessage> {
+public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<RPCMessage> {
     private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
-    private final TachyonConf mTachyonConf;
-    private final FileTransferType mTransferType;
+    public WorkerDataServerHandler() {
 
-    public DataServerHandler(final BlockDataManager dataManager, TachyonConf tachyonConf) {
-        mTachyonConf = Preconditions.checkNotNull(tachyonConf);
-        mTransferType = mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_FILE_TRANSFER_TYPE,
-                FileTransferType.class);
     }
 
     @Override
@@ -139,7 +134,7 @@ public final class DataServerHandler extends SimpleChannelInboundHandler<RPCMess
      * @return a DataBuffer representing the data
      * @throws IOException
      * @throws IllegalArgumentException
-     */
+     *//**
     private DataBuffer getDataBuffer(RPCBlockReadRequest req, BlockReader reader, long readLength)
             throws IOException, IllegalArgumentException {
         switch (mTransferType) {
@@ -155,5 +150,5 @@ public final class DataServerHandler extends SimpleChannelInboundHandler<RPCMess
                 reader.close();
                 throw new IllegalArgumentException("Only FileChannel is supported!");
         }
-    }
+    }*/
 }

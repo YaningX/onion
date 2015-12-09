@@ -18,6 +18,7 @@
         <module>worker</module>
         <module>util</module>
         <module>integration-test</module>
+        <module>configure</module>
     </modules>
 
     <dependencies>

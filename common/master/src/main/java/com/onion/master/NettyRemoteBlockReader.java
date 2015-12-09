@@ -84,8 +84,7 @@ public final class NettyRemoteBlockReader implements RemoteBlockReader {
           RPCErrorResponse error = (RPCErrorResponse) response;
           throw new IOException(error.getStatus().getMessage());
         default:
-          throw new IOException(ExceptionMessage.UNEXPECTED_RPC_RESPONSE
-              .getMessage(response.getType(), RPCMessage.Type.RPC_BLOCK_READ_RESPONSE));
+          throw new IOException();
       }
     } catch (Exception e) {
       throw new IOException(e);

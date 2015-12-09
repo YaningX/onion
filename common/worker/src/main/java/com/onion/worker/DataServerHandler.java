@@ -20,8 +20,8 @@ import io.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tachyon.Constants;
-import tachyon.StorageTierAssoc;
-import tachyon.WorkerStorageTierAssoc;
+//import tachyon.StorageTierAssoc;
+//import tachyon.WorkerStorageTierAssoc;
 import tachyon.conf.TachyonConf;
 import tachyon.network.protocol.*;
 import tachyon.network.protocol.databuffer.DataBuffer;
@@ -46,13 +46,13 @@ public final class DataServerHandler extends SimpleChannelInboundHandler<RPCMess
 
  // private final BlockDataManager mDataManager;
   private final TachyonConf mTachyonConf;
-  private final StorageTierAssoc mStorageTierAssoc;
+//  private final StorageTierAssoc mStorageTierAssoc;
   private final FileTransferType mTransferType;
 
   public DataServerHandler(final BlockDataManager dataManager, TachyonConf tachyonConf) {
  //   mDataManager = Preconditions.checkNotNull(dataManager);
     mTachyonConf = Preconditions.checkNotNull(tachyonConf);
-    mStorageTierAssoc = new WorkerStorageTierAssoc(mTachyonConf);
+  //  mStorageTierAssoc = new WorkerStorageTierAssoc(mTachyonConf);
     mTransferType = mTachyonConf.getEnum(Constants.WORKER_NETWORK_NETTY_FILE_TRANSFER_TYPE,
         FileTransferType.class);
   }

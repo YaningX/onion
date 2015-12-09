@@ -27,7 +27,6 @@ import tachyon.Constants;
 import tachyon.conf.TachyonConf;
 import tachyon.network.ChannelType;
 import tachyon.util.network.NettyUtils;
-import tachyon.worker.DataServer;
 import tachyon.worker.WorkerContext;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Runs a netty data server that responses to block requests.
  */
-public final class NettyDataServer implements DataServer {
+public final class WorkerDataServer {
   private final ServerBootstrap mBootstrap;
   private final ChannelFuture mChannelFuture;
   private final TachyonConf mTachyonConf;
@@ -45,8 +44,8 @@ public final class NettyDataServer implements DataServer {
   private final DataServerHandler mDataServerHandler;
 
 
-    public NettyDataServer(final InetSocketAddress address,
-                           final TachyonConf tachyonConf) {
+    public WorkerDataServer(final InetSocketAddress address,
+                            final TachyonConf tachyonConf) {
         mTachyonConf = Preconditions.checkNotNull(tachyonConf);
         mDataServerHandler =
                 new DataServerHandler(null, mTachyonConf);
@@ -59,7 +58,6 @@ public final class NettyDataServer implements DataServer {
         }
     }
 
-  @Override
   public void close() throws IOException {
     int quietPeriodSecs = mTachyonConf.getInt(Constants.WORKER_NETWORK_NETTY_SHUTDOWN_QUIET_PERIOD);
     int timeoutSecs = mTachyonConf.getInt(Constants.WORKER_NETWORK_NETTY_SHUTDOWN_TIMEOUT);
@@ -107,7 +105,6 @@ public final class NettyDataServer implements DataServer {
   /**
    * Gets the actual bind hostname.
    */
-  @Override
   public String getBindHost() {
     // Return value of io.netty.channel.Channel.localAddress() must be down-cast into types like
     // InetSocketAddress to get detailed info such as port.
@@ -119,14 +116,12 @@ public final class NettyDataServer implements DataServer {
   /**
    * Gets the port listening on.
    */
-  @Override
   public int getPort() {
     // Return value of io.netty.channel.Channel.localAddress() must be down-cast into types like
     // InetSocketAddress to get detailed info such as port.
     return ((InetSocketAddress) mChannelFuture.channel().localAddress()).getPort();
   }
 
-  @Override
   public boolean isClosed() {
     return mBootstrap.group().isShutdown();
   }
@@ -154,12 +149,5 @@ public final class NettyDataServer implements DataServer {
     boot.group(bossGroup, workerGroup).channel(socketChannelClass);
 
     return boot;
-  }
-
-  public static void main(String[] strings) throws IOException {
-    // BlockWorker blockWorker = new BlockWorker();
-      DataServer dataServer = new NettyDataServer(new InetSocketAddress("127.0.0.1", 29999),
-              WorkerContext.getConf());
-      System.out.println(123);
   }
 }

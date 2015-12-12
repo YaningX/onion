@@ -19,11 +19,9 @@ import com.onion.worker.WorkerDataServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import tachyon.client.RemoteBlockReader;
-import tachyon.client.RemoteBlockWriter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
@@ -86,14 +84,6 @@ public class MiniReplicationClusterTest {
         writer.close();
     }
 
-    @Test
-    public void remoteBlockWriteTest() throws IOException {
-        String sendData = System.getProperty("user.dir") + "/pom.xml";
-        doWrite(address1, blockId1, sendData);
-        doWrite(address2, blockId2, sendData);
-        doWrite(address3, blockId3, sendData);
-    }
-
     private void doRead(InetSocketAddress address, long blockId, String receivedFilePath) throws IOException {
         MasterBlockReader reader = new MasterBlockReader();
         RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
@@ -107,15 +97,18 @@ public class MiniReplicationClusterTest {
     }
 
     @Test
+    public void remoteBlockWriteTest() throws IOException {
+        String sendData = System.getProperty("user.dir") + "/pom.xml";
+        doWrite(address1, blockId1, sendData);
+        doWrite(address2, blockId2, sendData);
+        doWrite(address3, blockId3, sendData);
+    }
+
+    @Test
     public void remoteBlockReadTest() throws IOException {
-        MasterBlockReader reader = new MasterBlockReader();
-        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
-        ByteBuffer receivedBuf = reader.readRemoteBlock(new InetSocketAddress("127.0.0.1", 29998), 100, 0, file.length());
-        RandomAccessFile receivedFile = new RandomAccessFile(System.getProperty("user.dir") + "/received.xml", "rw");
-        byte[] receivedData = new byte[receivedBuf.limit()];
-        receivedBuf.get(receivedData);
-        receivedFile.write(receivedData);
-        receivedFile.close();
-        reader.close();
+        doRead(address1, blockId1, backend1 + "/received.xml");
+        doRead(address2, blockId2, backend2 + "/received.xml");
+        doRead(address3, blockId3, backend3 + "" +
+                "received.xml");
     }
 }

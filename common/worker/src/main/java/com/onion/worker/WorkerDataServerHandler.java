@@ -20,14 +20,12 @@ import io.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tachyon.Constants;
-import tachyon.conf.TachyonConf;
 import tachyon.network.protocol.*;
 import tachyon.network.protocol.databuffer.DataBuffer;
-import tachyon.network.protocol.databuffer.DataByteBuffer;
 import tachyon.network.protocol.databuffer.DataFileChannel;
-import tachyon.worker.block.BlockDataManager;
 import tachyon.worker.block.io.BlockReader;
 import tachyon.worker.block.io.BlockWriter;
+import tachyon.worker.block.io.LocalFileBlockReader;
 import tachyon.worker.block.io.LocalFileBlockWriter;
 
 import java.io.File;
@@ -72,7 +70,45 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
     }
 
     private void handleBlockReadRequest(final ChannelHandlerContext ctx,
-                                        final RPCBlockReadRequest req) throws IOException {
+                                        final RPCBlockReadRequest req) {
+        final long blockId = req.getBlockId();
+        final long offset = req.getOffset();
+        final long readLength = req.getLength();
+        String readFilePath = backendDir.getAbsolutePath() + "/" + blockId;
+        if (!new File(readFilePath).exists()) {
+            RPCBlockReadResponse resp =
+                    RPCBlockReadResponse.createErrorResponse(req, RPCResponse.Status.UNKNOWN_MESSAGE_ERROR);
+            ChannelFuture future = ctx.writeAndFlush(resp);
+            future.addListener(ChannelFutureListener.CLOSE);
+            return;
+        }
+
+        BlockReader blockReader = null;
+        try {
+            blockReader = new LocalFileBlockReader(readFilePath);
+            req.validate();
+            final long fileLength = blockReader.getLength();
+            validateBounds(req, fileLength);
+            DataBuffer dataBuffer = getDataBuffer(req, blockReader, readLength);
+            RPCBlockReadResponse resp = new RPCBlockReadResponse(blockId, offset, readLength,
+                    dataBuffer, RPCResponse.Status.SUCCESS);
+            ChannelFuture future = ctx.writeAndFlush(resp);
+            future.addListener(ChannelFutureListener.CLOSE);
+            future.addListener(new ClosableResourceChannelListener(blockReader));
+        } catch (IOException e) {
+            e.printStackTrace();
+            RPCBlockReadResponse resp =
+                    RPCBlockReadResponse.createErrorResponse(req, RPCResponse.Status.FILE_DNE);
+            ChannelFuture future = ctx.writeAndFlush(resp);
+            future.addListener(ChannelFutureListener.CLOSE);
+            if (blockReader != null) {
+                try {
+                    blockReader.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
     }
 
 
@@ -82,7 +118,7 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
         final long sessionId = req.getSessionId();
         final long blockId = req.getBlockId();
         final long offset = req.getOffset();
-        final long length = req.getLength();
+        final long writeLength = req.getLength();
         final DataBuffer data = req.getPayloadDataBuffer();
 
         BlockWriter blockWriter = null;
@@ -97,7 +133,7 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
             ByteBuffer buffer = data.getReadOnlyByteBuffer();
             blockWriter.append(buffer);
             RPCBlockWriteResponse resp =
-                    new RPCBlockWriteResponse(sessionId, blockId, offset, length, RPCResponse.Status.SUCCESS);
+                    new RPCBlockWriteResponse(sessionId, blockId, offset, writeLength, RPCResponse.Status.SUCCESS);
             ChannelFuture future = ctx.writeAndFlush(resp);
             future.addListener(ChannelFutureListener.CLOSE);
 
@@ -141,21 +177,15 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
      * @return a DataBuffer representing the data
      * @throws IOException
      * @throws IllegalArgumentException
-     *//**
-    private DataBuffer getDataBuffer(RPCBlockReadRequest req, BlockReader reader, long readLength)
-            throws IOException, IllegalArgumentException {
-        switch (mTransferType) {
-            case MAPPED:
-                ByteBuffer data = reader.read(req.getOffset(), (int) readLength);
-                return new DataByteBuffer(data, readLength);
-            case TRANSFER: // intend to fall through as TRANSFER is the default type.
-            default:
-                if (reader.getChannel() instanceof FileChannel) {
-                    return new DataFileChannel((FileChannel) reader.getChannel(), req.getOffset(),
-                            readLength);
-                }
-                reader.close();
-                throw new IllegalArgumentException("Only FileChannel is supported!");
+     */
+    DataBuffer getDataBuffer(RPCBlockReadRequest req, BlockReader reader, long readLength)
+            throws IOException {
+        if (reader.getChannel() instanceof FileChannel) {
+            return new DataFileChannel((FileChannel) reader.getChannel(), req.getOffset(),
+                    readLength);
         }
-    }*/
+        reader.close();
+        throw new IllegalArgumentException("Only FileChannel is supported!");
+    }
+
 }

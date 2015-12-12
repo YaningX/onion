@@ -73,7 +73,7 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
                                         final RPCBlockReadRequest req) {
         final long blockId = req.getBlockId();
         final long offset = req.getOffset();
-        final long readLength = req.getLength();
+        long readLength = req.getLength();
         String readFilePath = backendDir.getAbsolutePath() + "/" + blockId;
         if (!new File(readFilePath).exists()) {
             RPCBlockReadResponse resp =
@@ -89,6 +89,7 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
             req.validate();
             final long fileLength = blockReader.getLength();
             validateBounds(req, fileLength);
+            readLength = returnLength(offset, readLength, fileLength);
             DataBuffer dataBuffer = getDataBuffer(req, blockReader, readLength);
             RPCBlockReadResponse resp = new RPCBlockReadResponse(blockId, offset, readLength,
                     dataBuffer, RPCResponse.Status.SUCCESS);

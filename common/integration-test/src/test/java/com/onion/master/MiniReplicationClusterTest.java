@@ -19,11 +19,8 @@ import com.onion.worker.WorkerDataServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import tachyon.client.RemoteBlockReader;
-import tachyon.client.RemoteBlockWriter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;

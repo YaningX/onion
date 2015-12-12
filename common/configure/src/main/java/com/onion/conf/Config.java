@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Config API to get configuration properties from resources, like XML, Json,
+ * Config API to get configuration properties from Json,
  * ini, Java Properties and Map. It doesn't support writing back. It allows to
  * set configuration properties to ease the preparation of a Config.
  */

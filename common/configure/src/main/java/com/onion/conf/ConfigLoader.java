@@ -17,8 +17,20 @@
  *  under the License. 
  *  
  */
-package com.onion.master;
+package com.onion.conf;
 
-public abstract class ConfigLoader {
+import java.io.File;
+
+public class ConfigLoader {
+    private File conf;
+
+    public ConfigLoader(String confPath) {
+        this(new File(confPath));
+    }
+
+    public ConfigLoader(File conf) {
+        this.conf = conf;
+    }
+
 
 }

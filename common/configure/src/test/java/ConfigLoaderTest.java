@@ -1,3 +1,10 @@
+import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  *  Licensed to the Apache Software Foundation (ASF) under one
  *  or more contributor license agreements.  See the NOTICE file
@@ -17,14 +24,14 @@
  *  under the License.
  *
  */
-package com.onion.conf;
+public class ConfigLoaderTest {
+    @Test
+    public void loadTest() throws IOException {
+        Properties properties = new Properties();
+        InputStream input = new FileInputStream(System.getProperty("user.dir") + "/conf.properties");
+        properties.load(input);
+        System.out.println(properties.getProperty("name"));
+    }
 
-/**
- * An interface for constructs that desire to be configurable thru the framework.
- */
-public interface Configurable {
 
-    void setConfig(Config config);
-
-    Config getConfig();
 }

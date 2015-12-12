@@ -20,9 +20,11 @@
 package com.onion.conf;
 
 import java.io.File;
+import java.util.Map;
 
 public class ConfigLoader {
     private File conf;
+    private Map<String, String> map;
 
     public ConfigLoader(String confPath) {
         this(new File(confPath));
@@ -32,5 +34,19 @@ public class ConfigLoader {
         this.conf = conf;
     }
 
+    public String getString(String name) {
+        return null;
+    }
 
+    public String getString(String name, String defaultValue) {
+        return null;
+    }
+
+    public Integer getInt(String name) {
+        return null;
+    }
+
+    public Integer getInt(String name, int defaultValue) {
+        return null;
+    }
 }

@@ -19,20 +19,29 @@ import com.onion.worker.WorkerDataServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import tachyon.client.RemoteBlockReader;
 import tachyon.client.RemoteBlockWriter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 
 public class MiniReplicationClusterTest {
     private static WorkerDataServer workerDataServer1;
     private static WorkerDataServer workerDataServer2;
     private static WorkerDataServer workerDataServer3;
+    private static InetSocketAddress address1 = new InetSocketAddress("127.0.0.1", 29998);
+    private static InetSocketAddress address2 = new InetSocketAddress("127.0.0.1", 29999);
+    private static InetSocketAddress address3 = new InetSocketAddress("127.0.0.1", 30000);
     private static String backend1 = System.getProperty("user.dir") + "/target/onionBackend1";
     private static String backend2 = System.getProperty("user.dir") + "/target/onionBackend2";
     private static String backend3 = System.getProperty("user.dir") + "/target/onionBackend3";
+    private static long blockId1 = 100;
+    private static long blockId2 = 200;
+    private static long blockId3 = 300;
 
     @BeforeClass
     public static void setup() {
@@ -52,33 +61,61 @@ public class MiniReplicationClusterTest {
             backendDir3.mkdirs();
         }
 
-        workerDataServer1 = new WorkerDataServer(new InetSocketAddress("127.0.0.1", 29998),
+        workerDataServer1 = new WorkerDataServer(address1,
                 backend1);
-        workerDataServer2 = new WorkerDataServer(new InetSocketAddress("127.0.0.1", 2999),
+        workerDataServer2 = new WorkerDataServer(address2,
                 backend2);
+        workerDataServer3 = new WorkerDataServer(address3,
+                backend3);
     }
 
     @AfterClass
     public static void clear() throws IOException {
         workerDataServer1.close();
+        workerDataServer2.close();
+        workerDataServer3.close();
     }
 
-    private static void clearGeneratedFile() {
-        File writeFile = new File(backend1);
-        // if ()
-    }
-
-    @Test
-    public void remoteBlockWriteTest() throws IOException {
-        RemoteBlockWriter writer = new NettyRemoteBlockWriter();
-        writer.open(new InetSocketAddress("127.0.0.1", 29998), 100, 100);
-        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
+    private void doWrite(InetSocketAddress address, long blockId, String sendDataPath) throws IOException {
+        MasterBlockWriter writer = new MasterBlockWriter();
+        writer.open(address, blockId, 0);
+        RandomAccessFile file = new RandomAccessFile(sendDataPath, "rw");
         byte[] sendData = new byte[(int) file.length()];
         file.read(sendData);
         writer.write(sendData, 0, sendData.length);
         writer.close();
+    }
 
-        writer.open(new InetSocketAddress("127.0.0.1", 2999), 100, 100);
-        writer.write(sendData, 0, sendData.length);
+    @Test
+    public void remoteBlockWriteTest() throws IOException {
+        String sendData = System.getProperty("user.dir") + "/pom.xml";
+        doWrite(address1, blockId1, sendData);
+        doWrite(address2, blockId2, sendData);
+        doWrite(address3, blockId3, sendData);
+    }
+
+    private void doRead(InetSocketAddress address, long blockId, String receivedFilePath) throws IOException {
+        MasterBlockReader reader = new MasterBlockReader();
+        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
+        ByteBuffer receivedBuf = reader.readRemoteBlock(address, blockId, 0, file.length());
+        RandomAccessFile receivedFile = new RandomAccessFile(receivedFilePath, "rw");
+        byte[] receivedData = new byte[receivedBuf.limit()];
+        receivedBuf.get(receivedData);
+        receivedFile.write(receivedData);
+        receivedFile.close();
+        reader.close();
+    }
+
+    @Test
+    public void remoteBlockReadTest() throws IOException {
+        MasterBlockReader reader = new MasterBlockReader();
+        RandomAccessFile file = new RandomAccessFile(System.getProperty("user.dir") + "/pom.xml", "rw");
+        ByteBuffer receivedBuf = reader.readRemoteBlock(new InetSocketAddress("127.0.0.1", 29998), 100, 0, file.length());
+        RandomAccessFile receivedFile = new RandomAccessFile(System.getProperty("user.dir") + "/received.xml", "rw");
+        byte[] receivedData = new byte[receivedBuf.limit()];
+        receivedBuf.get(receivedData);
+        receivedFile.write(receivedData);
+        receivedFile.close();
+        reader.close();
     }
 }

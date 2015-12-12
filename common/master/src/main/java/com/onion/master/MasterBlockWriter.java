@@ -21,20 +21,17 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tachyon.Constants;
-import tachyon.client.RemoteBlockWriter;
-import tachyon.exception.ExceptionMessage;
 import tachyon.network.protocol.*;
 import tachyon.network.protocol.databuffer.DataByteArrayChannel;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Write data to a remote data server using Netty.
+ * Write data to a worker data server using Netty.
  */
-public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
+public final class MasterBlockWriter {
   private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final Bootstrap mClientBootstrap;
@@ -49,19 +46,18 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
   private long mWrittenBytes;
 
   /**
-   * Creates a new {@link NettyRemoteBlockWriter}.
+   * Creates a new {@link MasterBlockWriter}.
    */
-  public NettyRemoteBlockWriter() {
+  public MasterBlockWriter() {
     mHandler = new ClientHandler();
     mClientBootstrap = NettyClient.createClientBootstrap(mHandler);
     mOpen = false;
   }
 
-  @Override
   public void open(InetSocketAddress address, long blockId, long sessionId) throws IOException {
     if (mOpen) {
       throw new IOException();
-        //  ExceptionMessage.WRITER_ALREADY_OPEN.getMessage(mAddress, mBlockId, mSessionId));
+      //  ExceptionMessage.WRITER_ALREADY_OPEN.getMessage(mAddress, mBlockId, mSessionId));
     }
     mAddress = address;
     mBlockId = blockId;
@@ -70,14 +66,12 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
     mOpen = true;
   }
 
-  @Override
   public void close() {
     if (mOpen) {
       mOpen = false;
     }
   }
 
-  @Override
   public void write(byte[] bytes, int offset, int length) throws IOException {
     SingleResponseListener listener = new SingleResponseListener();
     try {
@@ -88,7 +82,7 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
       Channel channel = f.channel();
       mHandler.addListener(listener);
       channel.writeAndFlush(new RPCBlockWriteRequest(mSessionId, mBlockId, mWrittenBytes, length,
-          new DataByteArrayChannel(bytes, offset, length)));
+              new DataByteArrayChannel(bytes, offset, length)));
 
       RPCResponse response = listener.get(NettyClient.TIMEOUT_MS, TimeUnit.MILLISECONDS);
       channel.close().sync();
@@ -100,8 +94,7 @@ public final class NettyRemoteBlockWriter implements RemoteBlockWriter {
           LOG.info("status: {} from remote machine {} received", status, mAddress);
 
           if (status != RPCResponse.Status.SUCCESS) {
-       //     throw new IOException(ExceptionMessage.BLOCK_WRITE_ERROR.getMessage(mBlockId,
-        //        mSessionId, mAddress, status.getMessage()));
+            throw new IOException( status.getMessage());
           }
           mWrittenBytes += length;
           break;

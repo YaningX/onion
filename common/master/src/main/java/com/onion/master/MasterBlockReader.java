@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tachyon.Constants;
 import tachyon.client.RemoteBlockReader;
-import tachyon.exception.ExceptionMessage;
 import tachyon.network.protocol.*;
 
 import java.io.IOException;
@@ -31,9 +30,9 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Read data from remote data server using Netty.
+ * Read data from from worker data server using Netty.
  */
-public final class NettyRemoteBlockReader implements RemoteBlockReader {
+public final class MasterBlockReader implements RemoteBlockReader {
   private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final Bootstrap mClientBootstrap;
@@ -41,17 +40,11 @@ public final class NettyRemoteBlockReader implements RemoteBlockReader {
   /** A reference to read response so we can explicitly release the resource after reading. */
   private RPCBlockReadResponse mReadResponse = null;
 
-  /**
-   * Creates a new {@link NettyRemoteBlockReader}.
-   *
-   * TODO(gene): Creating a new remote block reader may be expensive, so consider a connection pool.
-   */
-  public NettyRemoteBlockReader() {
+  public MasterBlockReader() {
     mHandler = new ClientHandler();
     mClientBootstrap = NettyClient.createClientBootstrap(mHandler);
   }
 
-  @Override
   public ByteBuffer readRemoteBlock(InetSocketAddress address, long blockId, long offset,
       long length) throws IOException {
 
@@ -92,11 +85,8 @@ public final class NettyRemoteBlockReader implements RemoteBlockReader {
   }
 
   /**
-   * {@inheritDoc}
-   *
    * Release the underlying buffer of previous/current read response.
    */
-  @Override
   public void close() throws IOException {
     if (mReadResponse != null) {
       mReadResponse.getPayloadDataBuffer().release();

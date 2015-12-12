@@ -12,25 +12,10 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.onion.worker;
+package com.onion.master;
 
 /**
- * How a read response will transfer block data over the network. There is a difference in speed and
- * memory consumption between the two. {@link #MAPPED} is the default since at larger sizes it
- * outperforms {@link #TRANSFER}
+ * Configuration information for master node.
  */
-public enum FileTransferType {
-  /**
-   * Uses a {@link java.nio.MappedByteBuffer} to transfer data over the network
-   */
-  MAPPED,
-
-  /**
-   * Uses
-   * {@link java.nio.channels.FileChannel#transferTo(long, long,
-   * java.nio.channels.WritableByteChannel)}
-   * to transfer data over the network
-   */
-  TRANSFER
+public class MasterConfiguration {
 }

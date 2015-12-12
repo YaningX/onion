@@ -12,29 +12,11 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.onion.worker;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-
-import java.io.Closeable;
-
 /**
- * A listener that will close the given resource when the operation completes. This class accepts
- * null resources.
+ * Configuration for worker.
  */
-final class ClosableResourceChannelListener implements ChannelFutureListener {
-  private final Closeable mResource;
+public class WorkerConf {
 
-  ClosableResourceChannelListener(Closeable resource) {
-    mResource = resource;
-  }
-
-
-  public void operationComplete(ChannelFuture future) throws Exception {
-    if (mResource != null) {
-      mResource.close();
-    }
-  }
 }

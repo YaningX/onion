@@ -27,10 +27,10 @@ import tachyon.network.protocol.RPCMessageEncoder;
  * Adds the block server's pipeline into the channel.
  */
 public final class PipelineHandler extends ChannelInitializer<SocketChannel> {
-  private final DataServerHandler mDataServerHandler;
+  private final WorkerDataServerHandler mWorkerDataServerHandler;
 
-  public PipelineHandler(final DataServerHandler handler) {
-    mDataServerHandler = handler;
+  public PipelineHandler(final WorkerDataServerHandler handler) {
+    mWorkerDataServerHandler = handler;
   }
 
   @Override
@@ -40,6 +40,6 @@ public final class PipelineHandler extends ChannelInitializer<SocketChannel> {
     pipeline.addLast("frameDecoder", RPCMessage.createFrameDecoder());
     pipeline.addLast("RPCMessageDecoder", new RPCMessageDecoder());
     pipeline.addLast("RPCMessageEncoder", new RPCMessageEncoder());
-    pipeline.addLast("dataServerHandler", mDataServerHandler);
+    pipeline.addLast("dataServerHandler", mWorkerDataServerHandler);
   }
 }

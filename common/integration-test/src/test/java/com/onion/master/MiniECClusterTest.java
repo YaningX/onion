@@ -12,29 +12,11 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.onion.worker;
-
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-
-import java.io.Closeable;
+package com.onion.master;
 
 /**
- * A listener that will close the given resource when the operation completes. This class accepts
- * null resources.
+ * A cluster based on erasure code.
  */
-final class ClosableResourceChannelListener implements ChannelFutureListener {
-  private final Closeable mResource;
+public class MiniECClusterTest {
 
-  ClosableResourceChannelListener(Closeable resource) {
-    mResource = resource;
-  }
-
-
-  public void operationComplete(ChannelFuture future) throws Exception {
-    if (mResource != null) {
-      mResource.close();
-    }
-  }
 }

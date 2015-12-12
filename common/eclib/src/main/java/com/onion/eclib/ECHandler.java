@@ -12,46 +12,30 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.onion.worker;
-
+package com.onion.eclib;
 
 import java.io.File;
-import java.net.InetSocketAddress;
 
-public class Worker {
-    private InetSocketAddress workerAddress;
-    private WorkerConf workerConf;
-    private String backendDir;
-    private WorkerDataServer workerDataServer;
-
-    public Worker(WorkerConf workerConf) {
-        this.workerConf = workerConf;
-    }
+/**
+ * This is a hanlder to encode and decode a file. A wrapper for ErasureCoder.java.
+ */
+public class ECHandler {
+    private ErasureCoder coder;
 
 
-    /**
-     * Construct a Worker from a configuration file
-     * @param confDir
-     */
-    public Worker(File confDir) {
+    public ECHandler() {
 
     }
 
-    public Worker(InetSocketAddress workerAddress, String backendDir) {
-        this.workerAddress = workerAddress;
-        this.backendDir = backendDir;
-        this.workerDataServer = new WorkerDataServer(workerAddress, backendDir);
+    public void encode(String dataPath, byte[][] encodeData) {
+        encode(new File(dataPath), encodeData);
     }
 
-    public static void main(String[] args) {
-
-    }
-
-    public void process(String[] args) {
+    public void encode(File dataFile, byte[][] encodedData) {
 
     }
 
-    public void process() {
+    public void decode(byte[][] encodedData, byte[] decodedData) {
 
     }
 }

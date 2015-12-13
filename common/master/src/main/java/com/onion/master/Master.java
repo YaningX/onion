@@ -21,5 +21,10 @@ package com.onion.master;
  *
  */
 public class Master {
+    private MasterConfiguration masterConf;
+
+    public Master(MasterConfiguration masterConf) {
+        this.masterConf = masterConf;
+    }
 
 }

@@ -23,19 +23,37 @@ public class ECHandler {
     private ErasureCoder coder;
 
 
+    /**
+     * A constructor for ECHandler, parameter is not determined.
+     */
     public ECHandler() {
-
+        //TODO
     }
 
+    /**
+     * Encode a file to k byte arrays
+     * @param dataPath file path
+     * @param encodeData
+     */
     public void encode(String dataPath, byte[][] encodeData) {
         encode(new File(dataPath), encodeData);
     }
 
+    /**
+     *  Encode a file to k byte arrays
+     * @param dataFile
+     * @param encodedData
+     */
     public void encode(File dataFile, byte[][] encodedData) {
-
+        //TODO
     }
 
+    /**
+     * Decode a file from a group of byte arrays
+     * @param encodedData
+     * @param decodedData
+     */
     public void decode(byte[][] encodedData, byte[] decodedData) {
-
+        //TODO
     }
 }

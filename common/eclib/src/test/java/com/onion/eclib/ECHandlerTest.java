@@ -12,15 +12,9 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.onion.master;
+package com.onion.eclib;
 
-import com.onion.conf.Conf;
 
-/**
- * Configuration information for master node.
- */
-public class MasterConfiguration extends Conf {
-    static enum Key {
+public class ECHandlerTest {
 
-    }
 }

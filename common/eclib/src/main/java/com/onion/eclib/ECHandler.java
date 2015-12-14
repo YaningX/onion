@@ -164,6 +164,7 @@ public class ECHandler {
         outputStream.write(newData[i], 0, origSize - writeSize);
         outputStream.close();
     }
+
     public static void main(String[] strings) {
         int k = 6;
         int m = 3;

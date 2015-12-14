@@ -15,17 +15,19 @@
 package com.onion.worker;
 
 
+import com.onion.conf.Conf;
+
 import java.io.File;
 import java.net.InetSocketAddress;
 
 public class Worker {
     private InetSocketAddress workerAddress;
-    private WorkerConf workerConf;
     private String backendDir;
     private WorkerDataServer workerDataServer;
+    private Conf workerConf;
 
-    public Worker(WorkerConf workerConf) {
-        this.workerConf = workerConf;
+    public void loadWorkerConf() {
+
     }
 
 

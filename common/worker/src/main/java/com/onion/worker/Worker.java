@@ -26,8 +26,11 @@ public class Worker {
     private WorkerDataServer workerDataServer;
     private Conf workerConf;
 
-    public void loadWorkerConf() {
-
+    public void loadWorkerConf(String confDir) {
+        workerConf = new Conf();
+        workerConf.loadConf(confDir);
+        backendDir = workerConf.getString("backendDir");
+        workerAddress = new InetSocketAddress(workerConf.getInt("port"));
     }
 
 

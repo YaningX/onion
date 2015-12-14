@@ -65,6 +65,10 @@ public class Conf {
         return Integer.parseInt(properties.getProperty(key));
     }
 
+    public String getString(String key) {
+        return properties.getProperty(key);
+    }
+
     public void setString(String key, String value) {
         properties.setProperty(key, value);
     }

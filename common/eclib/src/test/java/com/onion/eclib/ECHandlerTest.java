@@ -16,6 +16,7 @@ package com.onion.eclib;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ import java.util.List;
 public class ECHandlerTest {
     private int k;
     private int m;
-    private int codeStyle;
+    private ErasureCoder coder;
     private int wordSize;
     private int packetSize;
 
@@ -33,31 +34,33 @@ public class ECHandlerTest {
 
     @Test
     /**
-     * @param codeStyle: enum{0（CauchyRSCoder）,1（CauchyGoodRSCoder）,2（VandermondeRSCoder）}
+     * @param
      */
     public void Test() throws IOException {
         this.k = 6;
         this.m = 3;
-        this.codeStyle = 2;
         this.wordSize = 8;
         this.packetSize = 8;
+        this.coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
         try {
             /** encode test **/
-            ECHandler encodeTest = new ECHandler(k, m, codeStyle,wordSize,packetSize);
-            String inputFilePath = System.getProperty("user.dir") + "/pom.xml";
+            ECHandler encodeTest = new ECHandler(k, m, coder,wordSize,packetSize);
+            String inputFilePath = System.getProperty("user.dir") + "/target/backup/pom.xml";
             byte[][] data = encodeTest.encode(inputFilePath);
 
             /** decode test **/
-            String outputFilePath = System.getProperty("user.dir") + "/recover_"+"pom.xml";
-            int[] erasures = generateRandomArray(m);
+            String outputFilePath = System.getProperty("user.dir") + "/target/backup/recover_"+"pom.xml";
+
+            int[] erasures = generateRandomArray(m);/** data deletion Simulation **/
             int blockSize = data[0].length;
             byte[] tmpArray = new byte[blockSize];
             for(int i = 0; i < m; i++) {
                 System.arraycopy(tmpArray, 0, data[erasures[i]], 0, blockSize);
             }
-            int fileSize = k * blockSize;
+            File f = new File(inputFilePath);
+            long fileSize = f.length();
 
-            ECHandler decodeTest = new ECHandler(k,m,codeStyle,wordSize,packetSize);
+            ECHandler decodeTest = new ECHandler(k,m,coder,wordSize,packetSize);
             decodeTest.decode(outputFilePath, fileSize, erasures, data);
         }
         catch (IOException e){

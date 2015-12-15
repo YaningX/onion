@@ -15,6 +15,7 @@
 package com.onion.master;
 
 
+import com.onion.worker.Worker;
 import com.onion.worker.WorkerDataServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -28,50 +29,23 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 public class MiniReplicationClusterTest {
-    private static WorkerDataServer workerDataServer1;
-    private static WorkerDataServer workerDataServer2;
-    private static WorkerDataServer workerDataServer3;
-    private static InetSocketAddress address1 = new InetSocketAddress("127.0.0.1", 29998);
-    private static InetSocketAddress address2 = new InetSocketAddress("127.0.0.1", 29999);
-    private static InetSocketAddress address3 = new InetSocketAddress("127.0.0.1", 30000);
-    private static String backend1 = System.getProperty("user.dir") + "/target/onionBackend1";
-    private static String backend2 = System.getProperty("user.dir") + "/target/onionBackend2";
-    private static String backend3 = System.getProperty("user.dir") + "/target/onionBackend3";
+    private static Worker worker1 = new Worker(System.getProperty("user.dir") + "/src/test/conf/worker1.conf");
+    private static Worker worker2 = new Worker(System.getProperty("user.dir") + "/src/test/conf/worker2.conf");
+    private static Worker worker3 = new Worker(System.getProperty("user.dir") + "/src/test/conf/worker3.conf");
     private static long blockId1 = 100;
     private static long blockId2 = 200;
     private static long blockId3 = 300;
 
     @BeforeClass
     public static void setup() {
-        File backendDir1 = new File(backend1);
-        File backendDir2 = new File(backend2);
-        File backendDir3 = new File(backend3);
-
-        if (!backendDir1.exists()) {
-            backendDir1.mkdirs();
-        }
-
-        if (!backendDir2.exists()) {
-            backendDir2.mkdirs();
-        }
-
-        if (!backendDir3.exists()) {
-            backendDir3.mkdirs();
-        }
-
-        workerDataServer1 = new WorkerDataServer(address1,
-                backend1);
-        workerDataServer2 = new WorkerDataServer(address2,
-                backend2);
-        workerDataServer3 = new WorkerDataServer(address3,
-                backend3);
+        worker1.process();
+        worker2.process();
+        worker3.process();
     }
 
     @AfterClass
     public static void clear() throws IOException {
-        workerDataServer1.close();
-        workerDataServer2.close();
-        workerDataServer3.close();
+
     }
 
     private void doWrite(InetSocketAddress address, long blockId, String sendDataPath) throws IOException {
@@ -99,16 +73,16 @@ public class MiniReplicationClusterTest {
     @Test
     public void remoteBlockWriteTest() throws IOException {
         String sendData = System.getProperty("user.dir") + "/pom.xml";
-        doWrite(address1, blockId1, sendData);
-        doWrite(address2, blockId2, sendData);
-        doWrite(address3, blockId3, sendData);
+        doWrite(worker1.getWorkerAddress(), blockId1, sendData);
+        doWrite(worker2.getWorkerAddress(), blockId2, sendData);
+        doWrite(worker3.getWorkerAddress(), blockId3, sendData);
     }
 
     @Test
     public void remoteBlockReadTest() throws IOException {
-        doRead(address1, blockId1, backend1 + "/received.xml");
-        doRead(address2, blockId2, backend2 + "/received.xml");
-        doRead(address3, blockId3, backend3 + "" +
-                "received.xml");
+        doRead(worker1.getWorkerAddress(), blockId1, worker1.getBackendDir() + "/received.xml");
+        doRead(worker2.getWorkerAddress(), blockId2, worker2.getBackendDir() + "/received.xml");
+        doRead(worker3.getWorkerAddress(), blockId3, worker3.getBackendDir() + "received.xml");
+        System.out.println(System.getProperty("user.dir"));
     }
 }

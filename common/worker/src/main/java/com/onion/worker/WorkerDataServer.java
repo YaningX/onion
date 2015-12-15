@@ -30,17 +30,21 @@ import java.net.InetSocketAddress;
  * Runs a netty worker data server that responses to block requests.
  */
 public final class WorkerDataServer {
-    private final ServerBootstrap mBootstrap;
-    private final ChannelFuture mChannelFuture;
-    private final WorkerDataServerHandler mWorkerDataServerHandler;
+    private ServerBootstrap mBootstrap;
+    private ChannelFuture mChannelFuture;
+    private WorkerDataServerHandler mWorkerDataServerHandler;
+    private InetSocketAddress address;
 
 
     public WorkerDataServer(final InetSocketAddress address,
                             final String backendDir) {
+        this.address = address;
         mWorkerDataServerHandler =
                 new WorkerDataServerHandler(backendDir);
         mBootstrap = createServerBootstrap().childHandler(new PipelineHandler(mWorkerDataServerHandler));
+    }
 
+    public void start() {
         try {
             mChannelFuture = mBootstrap.bind(address).sync();
         } catch (InterruptedException e) {

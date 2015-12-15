@@ -26,20 +26,19 @@ public class Worker {
     private WorkerDataServer workerDataServer;
     private Conf workerConf;
 
-    public void loadWorkerConf(String confDir) {
+    public Worker(String confPath) {
+        this(new File(confPath));
+    }
+
+    public Worker(File confDir) {
         workerConf = new Conf();
         workerConf.loadConf(confDir);
         backendDir = workerConf.getString("backendDir");
+        if (!new File(backendDir).exists()) {
+            new File(backendDir).mkdirs();
+        }
         workerAddress = new InetSocketAddress(workerConf.getInt("port"));
-    }
-
-
-    /**
-     * Construct a Worker from a configuration file
-     * @param confDir
-     */
-    public Worker(File confDir) {
-
+        this.workerDataServer = new WorkerDataServer(workerAddress, backendDir);
     }
 
     public Worker(InetSocketAddress workerAddress, String backendDir) {
@@ -48,15 +47,22 @@ public class Worker {
         this.workerDataServer = new WorkerDataServer(workerAddress, backendDir);
     }
 
-    public static void main(String[] args) {
-
+    public InetSocketAddress getWorkerAddress() {
+        return workerAddress;
     }
 
-    public void process(String[] args) {
+    public String getBackendDir() {
+        return backendDir;
+    }
 
+    public static void main(String[] args) {
+        String confPath = args[0];
+        Worker worker = new Worker(confPath);
+        worker.process();
     }
 
     public void process() {
-
+        workerDataServer.start();
     }
+
 }

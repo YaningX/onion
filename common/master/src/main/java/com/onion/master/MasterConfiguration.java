@@ -14,8 +14,13 @@
  */
 package com.onion.master;
 
+import com.onion.conf.Conf;
+
 /**
  * Configuration information for master node.
  */
-public class MasterConfiguration {
+public class MasterConfiguration extends Conf {
+    static enum Key {
+
+    }
 }

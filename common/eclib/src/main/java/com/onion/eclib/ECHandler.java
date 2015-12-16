@@ -28,8 +28,8 @@ public class ECHandler {
     private ErasureCoder coder;
     private int k;
     private int m;
-    private int wordSize = 8;
-    private int packetSize = 8;
+    private int wordSize;
+    private int packetSize;
 
     /**
      * A constructor for ECHandler, parameter is not determined.
@@ -45,24 +45,21 @@ public class ECHandler {
 
 
     /**
-     * Encode a file to k byte arrays
+     * Encode a file to k + m byte arrays
      * @param dataPath file path
      */
     public  byte[][] encode(String dataPath) {
-
         byte[][] data = null;
         try {
             data = encode(new File(dataPath));
-        }
-        catch (IOException e){
+        } catch (IOException e){
             e.printStackTrace();
         }
         return data;
-
     }
 
     /**
-     *  Encode a file to k byte arrays
+     *  Encode a file to k + m byte arrays
      * @param dataFile
      */
     private byte[][] encode(File dataFile) throws IOException {
@@ -121,6 +118,7 @@ public class ECHandler {
             e.printStackTrace();
         }
     }
+
     private void decode(File file, long fileSize, int[] erasures, byte[][] data) throws IOException {
 
         int blockSize = data[0].length;

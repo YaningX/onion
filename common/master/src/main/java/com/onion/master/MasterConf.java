@@ -19,29 +19,41 @@ package com.onion.master;
 
 import java.io.File;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Onion master to handle storage affairs.
+ * Master configuration from a master configuration file for init a master.
  */
-public class Master {
-    //Map input file to storage node file.
-    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
-    private MasterConf masterConf;
-    private List<InetSocketAddress> workerAddresses;
+public class MasterConf {
+    private File confDir;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
 
-    public Master(File confDir) {
-        masterConf = new MasterConf(confDir);
-        workerAddresses = masterConf.getWorkerAddresses();
-        dataWorkerAmount = masterConf.getDataWorkerAmount();
-        parityWorkerAmount = masterConf.getParityWorkerAmount();
+    private List<InetSocketAddress> workerAddresses = new LinkedList<InetSocketAddress>();
+
+    public MasterConf(File confDir) {
+        this.confDir = confDir;
     }
 
+    private void init() {
 
+    }
+
+    public List<InetSocketAddress> getWorkerAddresses() {
+        //TODO
+        return workerAddresses;
+    }
+
+    public int getDataWorkerAmount() {
+        //TODO
+        return dataWorkerAmount;
+    }
+
+    public int getParityWorkerAmount() {
+        //TODO
+        return parityWorkerAmount;
+    }
 
 
 }

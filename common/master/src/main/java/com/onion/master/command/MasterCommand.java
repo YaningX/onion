@@ -15,21 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.master;
+package com.onion.master.command;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.onion.master.Master;
 
 /**
- * Onion master to handle storage affairs.
+ * Abstract class for onion master command line. There are several implementation for different operations, such add
+ * write, read and delete.
  */
-public class Master {
-    //Map input file to storage node file.
-    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
-
-    public Master(File confDir) {
-
-    }
+public abstract class MasterCommand {
+    /**
+     * Execute the onion master command.
+     * @param input Input command to excute
+     */
+    public abstract void execute(Master master, String input);
 }

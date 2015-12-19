@@ -15,21 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.onion.master;
+package com.onion.master.command;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-/**
- * Onion master to handle storage affairs.
- */
-public class Master {
-    //Map input file to storage node file.
-    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
+import com.onion.master.Master;
 
-    public Master(File confDir) {
+public class MaterWriteCommand extends MasterCommand {
+    @Override
+    public void execute(Master master, String input) {
 
     }
 }

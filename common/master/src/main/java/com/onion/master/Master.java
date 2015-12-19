@@ -17,14 +17,21 @@
  */
 package com.onion.master;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
+ * Onion master to handle storage affairs.
  */
 public class Master {
     private MasterConfiguration masterConf;
+    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
 
     public Master(MasterConfiguration masterConf) {
         this.masterConf = masterConf;
     }
+
+
 
 }

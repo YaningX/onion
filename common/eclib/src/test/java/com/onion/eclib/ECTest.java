@@ -234,4 +234,9 @@ public class ECTest {
         runWith(backupDir, oriFile);
     }
 
+    @Test
+    public void importModuleTest() {
+
+    }
+
 }

@@ -19,6 +19,7 @@
 package com.onion.eclib;
 
 import com.google.common.base.Preconditions;
+import org.junit.Before;
 import com.google.common.io.Closer;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class ECTest {
         readFile(wholeData, oriFile);
         Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
         for (int i = 0; i < k; i++) {
-            System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
+             System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
         }
 
         /**
@@ -86,7 +87,7 @@ public class ECTest {
         /**
          * Delete some files
          */
-        deleteFile(generateRadomArray(m), backupDir, oriFile);
+        deleteFile( generateRadomArray(m), backupDir, oriFile);
 
         byte[][] newData = new byte[k][blockSize];
         byte[][] newParity = new byte[m][blockSize];
@@ -115,6 +116,7 @@ public class ECTest {
         outputStream.write(newData[i], 0, origSize - writeSize);
         outputStream.close();
     }
+
     private int[] generateRadomArray(int ArrayLen) {
         int[] randomArray = new int[ArrayLen];
         List<Integer> list = new ArrayList<Integer>(k + m);
@@ -184,7 +186,6 @@ public class ECTest {
         outputStream.write(data);
         outputStream.close();
     }
-
 
     private void readFile(byte[] data, File file) throws IOException {
         InputStream inputStream = new FileInputStream(file);

@@ -41,7 +41,19 @@ public class Master {
         parityWorkerAmount = masterConf.getParityWorkerAmount();
     }
 
+    public boolean write(File inputFile) {
+        //TODO
+        return false;
+    }
 
+    public boolean read(File inputFile) {
+        //TODO
+        return false;
+    }
 
+    public boolean delete(File inputFile) {
+        //TODO
+        return false;
+    }
 
 }

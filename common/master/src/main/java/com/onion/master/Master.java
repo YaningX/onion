@@ -17,7 +17,12 @@
  */
 package com.onion.master;
 
+import com.onion.eclib.CauchyGoodRSCoder;
+import com.onion.eclib.ECHandler;
+import com.onion.eclib.ErasureCoder;
+
 import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +38,23 @@ public class Master {
     private List<InetSocketAddress> workerAddresses;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
+    private int wordSize;
+    private int packetSize;
+    private ErasureCoder coder;
+    private ECHandler ecHandler;
 
-    public Master(File confDir) {
+    public Master(File confDir) throws IOException {
         masterConf = new MasterConf(confDir);
         workerAddresses = masterConf.getWorkerAddresses();
         dataWorkerAmount = masterConf.getDataWorkerAmount();
         parityWorkerAmount = masterConf.getParityWorkerAmount();
+        wordSize = masterConf.getWordSize();
+        packetSize = masterConf.getPacketSize();
+        coder = new CauchyGoodRSCoder(dataWorkerAmount,
+                parityWorkerAmount, wordSize, packetSize);
+        //Support Cauchcy Good RS code now, more coding types will be imported.
+        ecHandler = new ECHandler(dataWorkerAmount,
+                parityWorkerAmount, coder, wordSize, packetSize);
     }
 
     public boolean write(File inputFile) {

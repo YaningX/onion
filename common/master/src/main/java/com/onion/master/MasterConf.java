@@ -29,6 +29,9 @@ public class MasterConf {
     private File confDir;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
+    private int wordSize;
+    private int packetSize;
+    private String erasureCodeType;
 
     private List<InetSocketAddress> workerAddresses = new LinkedList<InetSocketAddress>();
 
@@ -50,10 +53,24 @@ public class MasterConf {
         return dataWorkerAmount;
     }
 
+    public int getWordSize() {
+        //TODO
+        return wordSize;
+    }
+
+    public int getPacketSize() {
+        //TODO
+        return packetSize;
+    }
+
     public int getParityWorkerAmount() {
         //TODO
         return parityWorkerAmount;
     }
 
+    public String getErasureCodeType() {
+        //TODO
+        return erasureCodeType;
+    }
 
 }

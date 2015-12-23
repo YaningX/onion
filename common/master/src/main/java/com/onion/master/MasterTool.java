@@ -20,6 +20,7 @@ package com.onion.master;
 import com.onion.master.command.MasterCommand;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class MasterTool {
                 return confDir;
         }
 
-        public static void main(String[] args) {
+        public static void main(String[] args) throws IOException{
                 if (args.length < 1) {
                         System.err.println(USAGE);
                         return;

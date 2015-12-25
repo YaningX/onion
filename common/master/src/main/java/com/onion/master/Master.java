@@ -17,12 +17,11 @@
  */
 package com.onion.master;
 
-import com.onion.eclib.CauchyGoodRSCoder;
 import com.onion.eclib.ECHandler;
 import com.onion.eclib.ErasureCoder;
 
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
@@ -43,22 +42,30 @@ public class Master {
     private ErasureCoder coder;
     private ECHandler ecHandler;
 
-    public Master(File confDir) throws IOException {
+    public Master(File confDir) throws Exception {
         masterConf = new MasterConf(confDir);
         workerAddresses = masterConf.getWorkerAddresses();
         dataWorkerAmount = masterConf.getDataWorkerAmount();
         parityWorkerAmount = masterConf.getParityWorkerAmount();
         wordSize = masterConf.getWordSize();
         packetSize = masterConf.getPacketSize();
-        coder = new CauchyGoodRSCoder(dataWorkerAmount,
-                parityWorkerAmount, wordSize, packetSize);
+        Class coderClass = Class.forName("com.onion.eclib." + masterConf.getErasureCodeType());
+        Constructor<?> constructor = coderClass.getConstructor(int.class,
+                int.class, int.class, int.class);
+        coder = (ErasureCoder) constructor.newInstance(dataWorkerAmount, parityWorkerAmount,
+                wordSize, packetSize);
+//        coder = new CauchyGoodRSCoder(dataWorkerAmount,
+//                parityWorkerAmount, wordSize, packetSize);
         //Support Cauchcy Good RS code now, more coding types will be imported.
         ecHandler = new ECHandler(dataWorkerAmount,
                 parityWorkerAmount, coder, wordSize, packetSize);
     }
 
-    public boolean write(File inputFile) {
+    public boolean write(String srcPath) throws Exception{
         //TODO
+        byte[][] encodeData = ecHandler.encode(srcPath);
+        List<InetSocketAddress> addresses = masterConf.getWorkerAddresses();
+
         return false;
     }
 
@@ -70,6 +77,10 @@ public class Master {
     public boolean delete(File inputFile) {
         //TODO
         return false;
+    }
+
+    private int generateBlockId() {
+        return 0;
     }
 
 }

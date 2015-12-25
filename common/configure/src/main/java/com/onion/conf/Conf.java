@@ -57,6 +57,11 @@ public class Conf {
         }
     }
 
+    public void saveConf(File dest) throws IOException{
+        OutputStream out = new FileOutputStream(dest);
+        properties.save(out, "store the worker message");
+    }
+
     public void setInt(String key, int value) {
         properties.setProperty(key, String.valueOf(value));
     }

@@ -97,7 +97,7 @@ public class MasterTool {
                 return confDir;
         }
 
-        public static void main(String[] args) throws IOException{
+        public static void main(String[] args) throws Exception{
                 if (args.length < 1) {
                         System.err.println(USAGE);
                         return;

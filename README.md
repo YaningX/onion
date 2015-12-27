@@ -31,6 +31,6 @@ See http://www.kaymgee.com/Kevin_Greenan/Software_files/jerasure.tar.gz
 2) make  
 3) sudo make install
 
-3. Install MySQL
+3. Install MySQL  
 1) sudo apt-get install mysql-server
 2) apt-get install mysql-client

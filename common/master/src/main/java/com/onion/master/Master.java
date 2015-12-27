@@ -79,7 +79,7 @@ public class Master {
         return false;
     }
 
-    private int generateBlockId() {
+    private synchronized long generateBlockId() {
         return 0;
     }
 

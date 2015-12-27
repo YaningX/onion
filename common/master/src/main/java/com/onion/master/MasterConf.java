@@ -30,7 +30,6 @@ import java.util.List;
  * Master configuration from a master configuration file for init a master.
  */
 public class MasterConf {
-    private static File confDir;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
     private int wordSize;
@@ -44,7 +43,6 @@ public class MasterConf {
     private List<InetSocketAddress> workerAddresses = new LinkedList<InetSocketAddress>();
 
     public MasterConf(File confDir) {
-        this.confDir = confDir;
         reader = new SAXReader();
         try {
             document = reader.read(confDir);
@@ -54,17 +52,7 @@ public class MasterConf {
         root = document.getRootElement();
     }
 
-//    public void init() {
-//        try {
-//            document = reader.read(confDir);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        root = document.getRootElement();
-//    }
-
     public List<InetSocketAddress> getWorkerAddresses() throws Exception{
-        //TODO
         Element address = root.element("InetAddress");
         List<Element> addList = address.elements();
         for (Element element : addList) {
@@ -78,31 +66,26 @@ public class MasterConf {
     }
 
     public int getDataWorkerAmount() {
-        //TODO
         dataWorkerAmount = Integer.parseInt(root.element("dataWorkerAmount").getText());
         return dataWorkerAmount;
     }
 
     public int getWordSize() {
-        //TODO
         wordSize = Integer.parseInt(root.element("wordSize").getText());
         return wordSize;
     }
 
     public int getPacketSize() {
-        //TODO
         packetSize = Integer.parseInt(root.element("packetSize").getText());
         return packetSize;
     }
 
     public int getParityWorkerAmount() {
-        //TODO
         parityWorkerAmount = Integer.parseInt(root.element("parityWorkerAmount").getText());
         return parityWorkerAmount;
     }
 
     public String getErasureCodeType() {
-        //TODO
         erasureCodeType = root.element("erasureCodeType").getText();
         return erasureCodeType;
     }

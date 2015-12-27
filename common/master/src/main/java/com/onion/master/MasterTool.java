@@ -18,12 +18,11 @@
 package com.onion.master;
 
 import com.onion.master.command.MasterCommand;
+import com.onion.master.command.MasterDeleteCommand;
+import com.onion.master.command.MasterReadCommand;
+import com.onion.master.command.MasterWriteCommand;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -68,11 +67,11 @@ public class MasterTool {
 
                 MasterCommand executor = null;
                 if (command.startsWith("write")) {
-
+                    executor = new MasterWriteCommand();
                 } else if (command.startsWith("read")) {
-
+                    executor = new MasterReadCommand();
                 } else if (command.startsWith("delete")) {
-
+                    executor = new MasterDeleteCommand();
                 }
 
                 if (executor == null) {

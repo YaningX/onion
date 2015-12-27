@@ -20,9 +20,20 @@ package com.onion.master.command;
 
 import com.onion.master.Master;
 
-public class MaterWriteCommand extends MasterCommand {
+public class MasterWriteCommand extends MasterCommand {
     @Override
     public void execute(Master master, String input) {
+        String[] inputSet = input.split(" ");
+        if (inputSet.length != 2) {
+            System.out.println("Please input the correct write command.");
+        }
 
+        try {
+            master.write(inputSet[1]);
+            System.out.println("Write success.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Write failed!");
+        }
     }
 }

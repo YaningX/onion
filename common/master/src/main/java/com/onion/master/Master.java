@@ -69,7 +69,7 @@ public class Master {
         return false;
     }
 
-    public boolean read(File inputFile) {
+    public boolean read(String inputFile, String recoveredFile) {
         //TODO
         return false;
     }

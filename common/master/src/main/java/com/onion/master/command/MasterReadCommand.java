@@ -22,6 +22,16 @@ import com.onion.master.Master;
 public class MasterReadCommand extends MasterCommand {
     @Override
     public void execute(Master master, String input) {
+        String[] inputSet = input.split(" ");
+        if (inputSet.length != 3) {
+            System.out.println("Please input correct read command.");
+        }
 
+        boolean result = master.read(inputSet[0], inputSet[1]);
+        if (result == false) {
+            System.out.println("Read failed.");
+        } else {
+            System.out.println("Read success.");
+        }
     }
 }

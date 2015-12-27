@@ -22,11 +22,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * A cluster based on erasure code.
@@ -79,24 +83,34 @@ public class MiniECClusterTest {
     }
 
     @BeforeClass
-    public static void step() {
+    public static void step() throws IOException{
         k = 6;
         m = 3;
         wordSize = 8;
         packetSize = 8;
-        coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
+//        coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
         workers = new Worker[k + m];
         for (int i = 0; i < workers.length; i++) {
-            workers[i] = new Worker(System.getProperty("user.dir") +
-                    "/src/test/conf/worker" + (i+1) + ".conf");
+            Properties property = new Properties();
+            property.load(new FileInputStream(System.getProperty("user.dir") +
+                    "/src/test/conf/worker" + (i+1) + ".conf"));
+            workers[i] = new Worker(new InetSocketAddress(property.getProperty("IP"),
+                    Integer.parseInt(property.getProperty("port"))), property.getProperty("backendDir"));
+//          workers[i] = new Worker(System.getProperty("user.dir") +
+//                    "/src/test/conf/worker" + (i+1) + ".conf");
             workers[i].process();
         }
     }
 
     @Test
-    public void remoteECTest() throws IOException{
+    public void remoteECTest() throws Exception{
         /** remote encode test**/
-        ErasureCoder coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
+        MasterConf masterConf = new MasterConf(new File(System.getProperty("user.dir") + "/conf.xml"));
+        Class coderClass = Class.forName("com.onion.eclib." + masterConf.getErasureCodeType());
+        Constructor<?> constructor = coderClass.getConstructor(int.class,
+                int.class, int.class, int.class);
+        coder = (ErasureCoder) constructor.newInstance(k, m, wordSize, packetSize);
+//        ErasureCoder coder = new CauchyGoodRSCoder(k, m, wordSize, packetSize);
         ECHandler handler = new ECHandler(k, m, coder, wordSize, packetSize);
         File srcFile = new File(System.getProperty("user.dir") + "/pom.xml");
         byte[][] encodeData = handler.encode(srcFile.toString());

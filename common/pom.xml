@@ -19,6 +19,7 @@
         <module>util</module>
         <module>integration-test</module>
         <module>configure</module>
+        <module>DBUtil</module>
     </modules>
 
     <dependencies>

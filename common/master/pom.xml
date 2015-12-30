@@ -36,5 +36,15 @@
             <artifactId>eclib</artifactId>
             <version>0.9.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.onion</groupId>
+            <artifactId>db</artifactId>
+            <version>0.9.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onion</groupId>
+            <artifactId>worker</artifactId>
+            <version>0.9.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

@@ -17,15 +17,20 @@
  */
 package com.onion.master;
 
+import com.onion.DBUtil.DBUtil;
 import com.onion.eclib.ECHandler;
 import com.onion.eclib.ErasureCoder;
+import com.onion.worker.Worker;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Onion master to handle storage affairs.
@@ -61,16 +66,48 @@ public class Master {
                 parityWorkerAmount, coder, wordSize, packetSize);
     }
 
-    public boolean write(String srcPath) throws Exception{
-        //TODO
+    public boolean write(String srcPath) {
         byte[][] encodeData = ecHandler.encode(srcPath);
-        List<InetSocketAddress> addresses = masterConf.getWorkerAddresses();
-
-        return false;
+        List<InetSocketAddress> addresses = null;
+        try {
+            addresses = masterConf.getWorkerAddresses();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        Worker[] workers = new Worker[encodeData.length];
+        long[] blockIDs = new long[encodeData.length];
+        for (int i =0; i < workers.length; i++) {
+            workers[i] = new Worker(addresses.get(i), "backendDir");
+            blockIDs[i] = generateBlockId();
+        }
+        MasterBlockWriter writer = new MasterBlockWriter();
+        for (int i = 0; i < workers.length; i++) {
+            try {
+                writer.open(workers[i].getWorkerAddress(), generateBlockId(), 0);
+                writer.write(encodeData[i], 0, encodeData[i].length);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                writer.close();
+            }
+        }
+        Properties property = new Properties();
+        try {
+            property.load(new FileInputStream(System.getProperty("user.dir") + "db.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
+                 property.getProperty("password"));
+        util.write(srcPath, blockIDs);
+        return true;
     }
 
     public boolean read(String inputFile, String recoveredFile) {
-        //TODO
+
         return false;
     }
 

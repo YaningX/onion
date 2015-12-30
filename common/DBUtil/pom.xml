@@ -10,7 +10,7 @@
         <version>0.9.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>DBUtil</artifactId>
+    <artifactId>db</artifactId>
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>

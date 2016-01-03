@@ -16,12 +16,10 @@ package com.onion.master;
 
 
 import com.onion.worker.Worker;
-import com.onion.worker.WorkerDataServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

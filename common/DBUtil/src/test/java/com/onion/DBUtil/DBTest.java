@@ -10,20 +10,17 @@ import org.junit.Test;
 
 public class DBTest {
     /**You need to change the three parameters below by youself*/
-    private String DB_URL = "jdbc:mysql://localhost/testdb";
-    private String USER = "root";
-    private String PASS = "laogu123";
+    private String DB_URL = "jdbc:mysql://localhost/storage";
+    private String USER = "sunhonglin";
+    private String PASS = "LOVEMYSELF1234";
 
     @Test
     public void test() {
         DBUtil db = new DBUtil(DB_URL, USER, PASS);
-
         db.createTable();
-
         long[] blockID = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
         String filename = "f1";
-
         db.write(filename, blockID);
         long[] ob = new long[20];
         db.read(filename, ob);
@@ -31,5 +28,4 @@ public class DBTest {
         db.delete(filename);
         db.droptable();
     }
-
 }

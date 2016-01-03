@@ -20,40 +20,35 @@ package com.onion.master;
 import com.onion.DBUtil.DBUtil;
 import com.onion.eclib.ECHandler;
 import com.onion.eclib.ErasureCoder;
-import com.onion.worker.Worker;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * Onion master to handle storage affairs.
  */
 public class Master {
     //Map input file to storage node file.
-    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
+//    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
     private MasterConf masterConf;
-    private List<InetSocketAddress> workerAddresses;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
     private int wordSize;
     private int packetSize;
     private ErasureCoder coder;
     private ECHandler ecHandler;
+    private List<InetSocketAddress> addresses;
 
-    public Master(File confDir) throws Exception {
-        masterConf = new MasterConf(confDir);
-        workerAddresses = masterConf.getWorkerAddresses();
+    public Master(File masterConfSrc) throws Exception {
+        masterConf = new MasterConf(masterConfSrc);
         dataWorkerAmount = masterConf.getDataWorkerAmount();
         parityWorkerAmount = masterConf.getParityWorkerAmount();
         wordSize = masterConf.getWordSize();
         packetSize = masterConf.getPacketSize();
+        addresses = masterConf.getWorkerAddresses();
         Class coderClass = Class.forName("com.onion.eclib." + masterConf.getErasureCodeType());
         Constructor<?> constructor = coderClass.getConstructor(int.class,
                 int.class, int.class, int.class);
@@ -68,31 +63,18 @@ public class Master {
 
     public boolean write(String srcPath) {
         byte[][] encodeData = ecHandler.encode(srcPath);
-        List<InetSocketAddress> addresses = null;
-        try {
-            addresses = masterConf.getWorkerAddresses();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        Worker[] workers = new Worker[encodeData.length];
-        long[] blockIDs = new long[encodeData.length];
-        for (int i =0; i < workers.length; i++) {
-            workers[i] = new Worker(addresses.get(i), "backendDir");
-            blockIDs[i] = generateBlockId();
-        }
+        long[] blockIDs = generateBlockId(encodeData.length);
         MasterBlockWriter writer = new MasterBlockWriter();
-        for (int i = 0; i < workers.length; i++) {
+        for (int i = 0; i < encodeData.length; i++) {
             try {
-                writer.open(workers[i].getWorkerAddress(), generateBlockId(), 0);
+                writer.open(addresses.get(i), blockIDs[i], 0);
                 writer.write(encodeData[i], 0, encodeData[i].length);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
-            } finally {
-                writer.close();
             }
         }
+        writer.close();
         Properties property = new Properties();
         try {
             property.load(new FileInputStream(System.getProperty("user.dir") + "db.properties"));
@@ -107,8 +89,43 @@ public class Master {
     }
 
     public boolean read(String inputFile, String recoveredFile) {
+        Properties property = new Properties();
+        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
+                property.getProperty("password"));
+        long[] blockIDs = new long[dataWorkerAmount + parityWorkerAmount];
+        util.read(inputFile, blockIDs);
+        byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][];
+        MasterBlockReader reader = new MasterBlockReader();
+        for (int i = 0; i < addresses.size(); i++) {
+            try {
+                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, data[i].length);
+                buffer.get(data[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int erasures[] = generateRandomArray(dataWorkerAmount);
+        ecHandler.decode(recoveredFile, new File(inputFile).length(), erasures, data);
+        return true;
+    }
 
-        return false;
+    private int[] generateRandomArray(int ArrayLen) {
+        int[] randomArray = new int[ArrayLen];
+        List<Integer> list = new ArrayList<Integer>(dataWorkerAmount + parityWorkerAmount);
+        for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+        for (int i = 0; i < dataWorkerAmount; i++) {
+            randomArray[i] = list.get(i);
+        }
+        return randomArray;
     }
 
     public boolean delete(File inputFile) {
@@ -116,8 +133,25 @@ public class Master {
         return false;
     }
 
-    private synchronized long generateBlockId() {
-        return 0;
+    private synchronized long[] generateBlockId(int ArrayLen) {
+        Properties property = new Properties();
+        try {
+            property.load(new FileInputStream(System.getProperty("user.dir") + "/blockID.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        long id = Long.parseLong(property.getProperty("id"));
+        long[] ids = new long[ArrayLen];
+        for (int i = 1; i <= ArrayLen; i++) {
+            ids[i] = id + i;
+        }
+        property.setProperty("id", String.valueOf(id + ArrayLen));
+        try {
+            property.store(new FileOutputStream(System.getProperty("user.dir") + "/blockID.properties"),
+                    "the value of id");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ids;
     }
-
 }

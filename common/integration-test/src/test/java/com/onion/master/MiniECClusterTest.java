@@ -14,7 +14,6 @@
  */
 package com.onion.master;
 
-import com.onion.eclib.CauchyGoodRSCoder;
 import com.onion.eclib.ECHandler;
 import com.onion.eclib.ErasureCoder;
 import com.onion.worker.Worker;

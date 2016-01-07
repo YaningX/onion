@@ -20,6 +20,7 @@
         <module>integration-test</module>
         <module>configure</module>
         <module>DBUtil</module>
+        <module>web</module>
     </modules>
 
     <dependencies>

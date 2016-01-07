@@ -73,11 +73,14 @@ public class Master {
                 e.printStackTrace();
                 return false;
             }
+            writer.close();
         }
-        writer.close();
         Properties property = new Properties();
+        String configPath;
         try {
-            property.load(new FileInputStream(System.getProperty("user.dir") + "db.properties"));
+            String path = this.getClass().getResource("/").getPath();
+            configPath = path.substring(0, path.indexOf("common") + "common".length());
+            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -90,13 +93,22 @@ public class Master {
 
     public boolean read(String inputFile, String recoveredFile) {
         Properties property = new Properties();
+        String configPath;
+        try {
+            String path = this.getClass().getResource("/").getPath();
+            configPath = path.substring(0, path.indexOf("common") + "common".length());
+            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
         DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
                 property.getProperty("password"));
         long[] blockIDs = new long[dataWorkerAmount + parityWorkerAmount];
         util.read(inputFile, blockIDs);
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][];
         MasterBlockReader reader = new MasterBlockReader();
-        for (int i = 0; i < addresses.size(); i++) {
+        for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, data[i].length);
                 buffer.get(data[i]);
@@ -135,19 +147,22 @@ public class Master {
 
     private synchronized long[] generateBlockId(int ArrayLen) {
         Properties property = new Properties();
+        String configPath = null;
         try {
-            property.load(new FileInputStream(System.getProperty("user.dir") + "/blockID.properties"));
+            String path = this.getClass().getResource("/").getPath();
+            configPath = path.substring(0, path.indexOf("common") + "common".length());
+            property.load(new FileInputStream(configPath + "/master/src/main/config/blockID.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         long id = Long.parseLong(property.getProperty("id"));
         long[] ids = new long[ArrayLen];
-        for (int i = 1; i <= ArrayLen; i++) {
-            ids[i] = id + i;
+        for (int i = 0; i < ArrayLen; i++) {
+            ids[i] = id + i + 1;
         }
         property.setProperty("id", String.valueOf(id + ArrayLen));
         try {
-            property.store(new FileOutputStream(System.getProperty("user.dir") + "/blockID.properties"),
+            property.store(new FileOutputStream(configPath + "/master/src/main/config/blockID.properties"),
                     "the value of id");
         } catch (IOException e) {
             e.printStackTrace();

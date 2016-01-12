@@ -43,9 +43,9 @@ public class Launcher {
         // AnnotationConfiguration in order to correctly
         // set up the jsp container
         Configuration.ClassList classList = Configuration.ClassList.setServerDefault(server);
-        classList.addBefore(
-                "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
-                "org.eclipse.jetty.annotations.AnnotationConfiguration");
+//        classList.addBefore(
+//                "org.eclipse.jetty.webapp.JettyWebXmlConfiguration",
+//                "org.eclipse.jetty.annotations.AnnotationConfiguration");
 
         webContext.setAttribute(
                 "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
@@ -67,8 +67,7 @@ public class Launcher {
         }
     }
 
-    private List<ContainerInitializer> jspInitializers()
-    {
+    private List<ContainerInitializer> jspInitializers() {
         JettyJasperInitializer sci = new JettyJasperInitializer();
         ContainerInitializer initializer = new ContainerInitializer(sci, null);
         List<ContainerInitializer> initializers = new ArrayList<ContainerInitializer>();
@@ -76,8 +75,7 @@ public class Launcher {
         return initializers;
     }
 
-    private ServletHolder jspServletHolder()
-    {
+    private ServletHolder jspServletHolder() {
         ServletHolder holderJsp = new ServletHolder("jsp", JettyJspServlet.class);
         holderJsp.setInitOrder(0);
         holderJsp.setInitParameter("logVerbosityLevel", "DEBUG");

@@ -11,7 +11,6 @@ public class FileEntity {
     private int id;
     private String filename;
     private String blockIDs;
-    private String username;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -43,16 +42,6 @@ public class FileEntity {
         this.blockIDs = blockIDs;
     }
 
-    @Basic
-    @Column(name = "username", nullable = false, length = 20)
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,7 +52,6 @@ public class FileEntity {
         if (id != that.id) return false;
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
         if (blockIDs != null ? !blockIDs.equals(that.blockIDs) : that.blockIDs != null) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
 
         return true;
     }
@@ -73,7 +61,6 @@ public class FileEntity {
         int result = id;
         result = 31 * result + (filename != null ? filename.hashCode() : 0);
         result = 31 * result + (blockIDs != null ? blockIDs.hashCode() : 0);
-        result = 31 * result + (username != null ? username.hashCode() : 0);
         return result;
     }
 }

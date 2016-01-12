@@ -17,7 +17,6 @@
  */
 package com.onion.master;
 
-import com.onion.DBUtil.DBUtil;
 import com.onion.eclib.ECHandler;
 import com.onion.eclib.ErasureCoder;
 
@@ -32,7 +31,7 @@ import java.util.*;
  */
 public class Master {
     //Map input file to storage node file.
-//    private Map<String, List<Integer>> storageMap = new HashMap<String, List<Integer>>();
+    private Map<String, List<Long>> storageMap = new HashMap<String, List<Long>>();
     private MasterConf masterConf;
     private int dataWorkerAmount;
     private int parityWorkerAmount;
@@ -75,42 +74,53 @@ public class Master {
             }
             writer.close();
         }
-        Properties property = new Properties();
-        String configPath;
-        try {
-            String path = this.getClass().getResource("/").getPath();
-            configPath = path.substring(0, path.indexOf("common") + "common".length());
-            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        String filename = new File(srcPath).getName();
+//        Properties property = new Properties();
+//        String configPath;
+//        try {
+//            String path = this.getClass().getResource("/").getPath();
+//            configPath = path.substring(0, path.indexOf("common") + "common".length());
+//            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
+//                 property.getProperty("password"));
+//        util.write(srcPath, blockIDs);
+        List<Long> idList = new ArrayList<Long>();
+        idList.add((long)encodeData[0].length);
+        for (int i = 0; i < blockIDs.length; i++) {
+            idList.add(blockIDs[i]);
         }
-        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
-                 property.getProperty("password"));
-        util.write(srcPath, blockIDs);
+        storageMap.put(filename, idList);
         return true;
     }
 
     public boolean read(String inputFile, String recoveredFile) {
-        Properties property = new Properties();
-        String configPath;
-        try {
-            String path = this.getClass().getResource("/").getPath();
-            configPath = path.substring(0, path.indexOf("common") + "common".length());
-            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
-                property.getProperty("password"));
+//        Properties property = new Properties();
+//        String configPath;
+//        try {
+//            String path = this.getClass().getResource("/").getPath();
+//            configPath = path.substring(0, path.indexOf("common") + "common".length());
+//            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+        File srcFile = new File(inputFile);
+        String filename = srcFile.getName();
+        List<Long> idList = storageMap.get(filename);
         long[] blockIDs = new long[dataWorkerAmount + parityWorkerAmount];
-        util.read(inputFile, blockIDs);
-        byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][];
+        for (int i = 1; i < blockIDs.length; i++) {
+            blockIDs[i] = idList.get(i);
+        }
+        int blockSize = idList.get(0).intValue();
+        byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
-                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, data[i].length);
+                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, blockSize);
                 buffer.get(data[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -123,12 +133,12 @@ public class Master {
             e.printStackTrace();
         }
         int erasures[] = generateRandomArray(dataWorkerAmount);
-        ecHandler.decode(recoveredFile, new File(inputFile).length(), erasures, data);
+        ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
         return true;
     }
 
-    private int[] generateRandomArray(int ArrayLen) {
-        int[] randomArray = new int[ArrayLen];
+    private int[] generateRandomArray(int arrayLen) {
+        int[] randomArray = new int[arrayLen];
         List<Integer> list = new ArrayList<Integer>(dataWorkerAmount + parityWorkerAmount);
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             list.add(i);
@@ -145,7 +155,7 @@ public class Master {
         return false;
     }
 
-    private synchronized long[] generateBlockId(int ArrayLen) {
+    private synchronized long[] generateBlockId(int arrayLen) {
         Properties property = new Properties();
         String configPath = null;
         try {
@@ -156,11 +166,11 @@ public class Master {
             e.printStackTrace();
         }
         long id = Long.parseLong(property.getProperty("id"));
-        long[] ids = new long[ArrayLen];
-        for (int i = 0; i < ArrayLen; i++) {
+        long[] ids = new long[arrayLen];
+        for (int i = 0; i < arrayLen; i++) {
             ids[i] = id + i + 1;
         }
-        property.setProperty("id", String.valueOf(id + ArrayLen));
+        property.setProperty("id", String.valueOf(id + arrayLen));
         try {
             property.store(new FileOutputStream(configPath + "/master/src/main/config/blockID.properties"),
                     "the value of id");

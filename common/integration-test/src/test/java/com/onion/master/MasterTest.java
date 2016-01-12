@@ -1,6 +1,5 @@
 package com.onion.master;
 
-import com.onion.DBUtil.DBUtil;
 import com.onion.worker.Worker;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -26,7 +25,6 @@ public class MasterTest {
         recoverPath = "/home/sunhonglin/work/common/integration-test/target/recover_pom.xml";
         masterConfSrc = "/home/sunhonglin/work/onion/common/master/conf.xml";
         master = new Master(new File(masterConfSrc));
-        DBUtil util = new DBUtil("jdbc:mysql://localhost/storage", "sunhonglin", "LOVEMYSELF1234");
         Worker[] workers = new Worker[9];
         for (int i = 0; i < workers.length; i++) {
             Properties property = new Properties();
@@ -36,22 +34,16 @@ public class MasterTest {
                     Integer.parseInt(property.getProperty("port"))), property.getProperty("backendDir"));
             workers[i].process();
         }
-        util.createTable();
     }
 
     @AfterClass
     public static void clear() {
-        DBUtil util = new DBUtil("jdbc:mysql://localhost/storage", "sunhonglin", "LOVEMYSELF1234");
-        util.droptable();
     }
 
     @Test
-    public void masterWriteTest() {
+    public void masterWriteAndReadTest() {
         master.write(srcPath);
-    }
-
-    @Test
-    public void masterReadTest() {
         master.read(srcPath, recoverPath);
     }
+
 }

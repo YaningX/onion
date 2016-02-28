@@ -112,15 +112,15 @@ public class Master {
         String filename = srcFile.getName();
         List<Long> idList = storageMap.get(filename);
         long[] blockIDs = new long[dataWorkerAmount + parityWorkerAmount];
-        for (int i = 1; i < blockIDs.length; i++) {
-            blockIDs[i] = idList.get(i);
+        for (int i = 1; i <= blockIDs.length; i++) {
+            blockIDs[i - 1] = idList.get(i);
         }
         int blockSize = idList.get(0).intValue();
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
-                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, blockSize);
+                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, (long)blockSize);
                 buffer.get(data[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,7 +132,7 @@ public class Master {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int erasures[] = generateRandomArray(dataWorkerAmount);
+        int erasures[] = generateRandomArray(parityWorkerAmount);
         ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
         return true;
     }
@@ -144,7 +144,7 @@ public class Master {
             list.add(i);
         }
         Collections.shuffle(list);
-        for (int i = 0; i < dataWorkerAmount; i++) {
+        for (int i = 0; i < parityWorkerAmount; i++) {
             randomArray[i] = list.get(i);
         }
         return randomArray;

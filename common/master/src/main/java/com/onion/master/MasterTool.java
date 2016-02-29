@@ -89,6 +89,7 @@ public class MasterTool {
                 }
 
                 if (!confDir.exists()) {
+                        System.err.println("Can not locate master configuration directory");
                         throw new RuntimeException("Can not locate master configuration directory "
                                 + confDir.getAbsolutePath());
                 }

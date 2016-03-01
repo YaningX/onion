@@ -223,7 +223,7 @@ public class ECTest {
 
     @Test
     public void  CauchyGoodRSCoder() throws IOException {
-        this.k = 6;
+        this.k = 4;
         this.m = 3;
         this.wordSize = 8;
         this.packetSize = 8;

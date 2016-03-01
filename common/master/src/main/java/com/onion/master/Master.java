@@ -81,23 +81,20 @@ public class Master {
             idList.add(blockIDs[i]);
         }
         storageMap.put(filename, idList);
+
+        //todo 写到一个xml文件里面
         return true;
     }
 
-    public boolean read(String inputFile, String recoveredFile) {
-        File srcFile = new File(inputFile);
-        String filename = srcFile.getName();
-        List<Long> idList = storageMap.get(filename);
-        long[] blockIDs = new long[dataWorkerAmount + parityWorkerAmount];
-        for (int i = 1; i < blockIDs.length; i++) {
-            blockIDs[i] = idList.get(i);
-        }
-        int blockSize = idList.get(0).intValue();
+    public boolean read(long blockId, String recoveredFile) {
+        //blockId---->>查询得到了blockSize & fileSize
+
+        int blockSize = 0;//
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
-                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, blockSize);
+                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockId, 0, blockSize);
                 buffer.get(data[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -110,7 +107,7 @@ public class Master {
             e.printStackTrace();
         }
         int erasures[] = generateRandomArray(dataWorkerAmount);
-        ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
+      //  ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
         return true;
     }
 
@@ -133,11 +130,12 @@ public class Master {
     }
 
     private synchronized long[] generateBlockId(int arrayLen) {
+
+        //todo 返回一个long值.
         Properties property = new Properties();
         String configPath = null;
         try {
             String path = this.getClass().getResource("/").getPath();
-            configPath = path.substring(0, path.indexOf("common") + "common".length());
             property.load(new FileInputStream("/Users/xuyaning/work/onion/dist/onion-master/conf/blockID.properties"));
         } catch (IOException e) {
             e.printStackTrace();

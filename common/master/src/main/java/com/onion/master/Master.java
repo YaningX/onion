@@ -75,19 +75,6 @@ public class Master {
             writer.close();
         }
         String filename = new File(srcPath).getName();
-//        Properties property = new Properties();
-//        String configPath;
-//        try {
-//            String path = this.getClass().getResource("/").getPath();
-//            configPath = path.substring(0, path.indexOf("common") + "common".length());
-//            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
-//                 property.getProperty("password"));
-//        util.write(srcPath, blockIDs);
         List<Long> idList = new ArrayList<Long>();
         idList.add((long)encodeData[0].length);
         for (int i = 0; i < blockIDs.length; i++) {
@@ -98,16 +85,6 @@ public class Master {
     }
 
     public boolean read(String inputFile, String recoveredFile) {
-//        Properties property = new Properties();
-//        String configPath;
-//        try {
-//            String path = this.getClass().getResource("/").getPath();
-//            configPath = path.substring(0, path.indexOf("common") + "common".length());
-//            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
         File srcFile = new File(inputFile);
         String filename = srcFile.getName();
         List<Long> idList = storageMap.get(filename);
@@ -161,7 +138,7 @@ public class Master {
         try {
             String path = this.getClass().getResource("/").getPath();
             configPath = path.substring(0, path.indexOf("common") + "common".length());
-            property.load(new FileInputStream(configPath + "/master/src/main/config/blockID.properties"));
+            property.load(new FileInputStream("/Users/xuyaning/work/onion/dist/onion-master/conf/blockID.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +149,7 @@ public class Master {
         }
         property.setProperty("id", String.valueOf(id + arrayLen));
         try {
-            property.store(new FileOutputStream(configPath + "/master/src/main/config/blockID.properties"),
+            property.store(new FileOutputStream("/Users/xuyaning/work/onion/dist/onion-master/conf/blockID.properties"),
                     "the value of id");
         } catch (IOException e) {
             e.printStackTrace();

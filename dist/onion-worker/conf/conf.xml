@@ -15,6 +15,5 @@
         <address>127.0.0.1:30007</address>
         <address>127.0.0.1:30008</address>
         <address>127.0.0.1:30009</address>
-        <address>127.0.0.1:30010</address>
     </InetAddress>
 </configure>

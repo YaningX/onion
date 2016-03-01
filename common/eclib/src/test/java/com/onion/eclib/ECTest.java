@@ -52,7 +52,7 @@ public class ECTest {
             blockSize = ;
             wholeSize = blockSize * k;
         }*/
-        blockSize = (blockSize / (packetSize * wordSize + 1) + 1) * (packetSize * wordSize);
+        blockSize = (blockSize / packetSize * wordSize + 1) * (packetSize * wordSize);
         int wholeSize = blockSize * k;
         /**
          *  Read data from a file into a two-dimension array.
@@ -223,7 +223,7 @@ public class ECTest {
 
     @Test
     public void  CauchyGoodRSCoder() throws IOException {
-        this.k = 4;
+        this.k = 6;
         this.m = 3;
         this.wordSize = 8;
         this.packetSize = 8;

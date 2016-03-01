@@ -67,7 +67,7 @@ public class ECHandler {
         long dataSize = dataFile.length();
         Preconditions.checkArgument(dataSize <= Integer.MAX_VALUE, "The original file is too large.");
         int blockSize = (int) dataSize / k;
-        blockSize = (blockSize / (packetSize * wordSize + 1) + 1) * (packetSize * wordSize);
+        blockSize = (blockSize / packetSize * wordSize + 1) * (packetSize * wordSize);
         int wholeSize = blockSize * k;
         /**
          *  Read data from a file into a two-dimension array.
@@ -75,7 +75,7 @@ public class ECHandler {
         byte[][] data = new byte[k][blockSize];
         byte[] wholeData = new byte[wholeSize];
         readFile(wholeData, dataFile);
-        Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
+       // Arrays.fill(wholeData, (int) dataSize, wholeSize - 1, (byte) 0);
         for (int i = 0; i < k; i++) {
             System.arraycopy(wholeData, i * blockSize, data[i], 0, blockSize);
         }

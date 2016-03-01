@@ -27,7 +27,7 @@ public class MasterReadCommand extends MasterCommand {
             System.out.println("Please input correct read command.");
         }
 
-        boolean result = master.read(inputSet[0], inputSet[1]);
+        boolean result = master.read(Long.valueOf(inputSet[0]), inputSet[1]);
         if (result == false) {
             System.out.println("Read failed.");
         } else {

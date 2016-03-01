@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>onion-dist</artifactId>
-
-
+    <packaging>pom</packaging>
+    <modules>
+        <module>onion-master</module>
+        <module>onion-worker</module>
+    </modules>
 </project>

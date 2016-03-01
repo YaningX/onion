@@ -75,28 +75,18 @@ public class Master {
             writer.close();
         }
         String filename = new File(srcPath).getName();
-//        Properties property = new Properties();
-//        String configPath;
-//        try {
-//            String path = this.getClass().getResource("/").getPath();
-//            configPath = path.substring(0, path.indexOf("common") + "common".length());
-//            property.load(new FileInputStream(configPath + "/master/src/main/config/db.properties"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        DBUtil util = new DBUtil(property.getProperty("url"), property.getProperty("username"),
-//                 property.getProperty("password"));
-//        util.write(srcPath, blockIDs);
         List<Long> idList = new ArrayList<Long>();
         idList.add((long)encodeData[0].length);
         for (int i = 0; i < blockIDs.length; i++) {
             idList.add(blockIDs[i]);
         }
         storageMap.put(filename, idList);
+
+        //todo 写到一个xml文件里面
         return true;
     }
 
+<<<<<<< HEAD
     public boolean read(String inputFile, String recoveredFile) {
 //        Properties property = new Properties();
 //        String configPath;
@@ -116,11 +106,21 @@ public class Master {
             blockIDs[i - 1] = idList.get(i);
         }
         int blockSize = idList.get(0).intValue();
+=======
+    public boolean read(long blockId, String recoveredFile) {
+        //blockId---->>查询得到了blockSize & fileSize
+
+        int blockSize = 0;//
+>>>>>>> origin/master
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
+<<<<<<< HEAD
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, (long)blockSize);
+=======
+                ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockId, 0, blockSize);
+>>>>>>> origin/master
                 buffer.get(data[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,8 +132,13 @@ public class Master {
         } catch (IOException e) {
             e.printStackTrace();
         }
+<<<<<<< HEAD
         int erasures[] = generateRandomArray(parityWorkerAmount);
         ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
+=======
+        int erasures[] = generateRandomArray(dataWorkerAmount);
+      //  ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
+>>>>>>> origin/master
         return true;
     }
 
@@ -156,12 +161,13 @@ public class Master {
     }
 
     private synchronized long[] generateBlockId(int arrayLen) {
+
+        //todo 返回一个long值.
         Properties property = new Properties();
         String configPath = null;
         try {
             String path = this.getClass().getResource("/").getPath();
-            configPath = path.substring(0, path.indexOf("common") + "common".length());
-            property.load(new FileInputStream(configPath + "/master/src/main/config/blockID.properties"));
+            property.load(new FileInputStream("/Users/xuyaning/work/onion/dist/onion-master/conf/blockID.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +178,7 @@ public class Master {
         }
         property.setProperty("id", String.valueOf(id + arrayLen));
         try {
-            property.store(new FileOutputStream(configPath + "/master/src/main/config/blockID.properties"),
+            property.store(new FileOutputStream("/Users/xuyaning/work/onion/dist/onion-master/conf/blockID.properties"),
                     "the value of id");
         } catch (IOException e) {
             e.printStackTrace();

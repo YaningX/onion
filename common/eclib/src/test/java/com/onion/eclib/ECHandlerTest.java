@@ -37,7 +37,7 @@ public class ECHandlerTest {
      * @param
      */
     public void Test() throws IOException {
-        this.k = 6;
+        this.k = 4;
         this.m = 3;
         this.wordSize = 8;
         this.packetSize = 8;
@@ -45,7 +45,7 @@ public class ECHandlerTest {
         try {
             /** encode test **/
             ECHandler encodeTest = new ECHandler(k, m, coder,wordSize,packetSize);
-            String inputFilePath = System.getProperty("user.dir") + "/target/backup/pom.xml";
+            String inputFilePath = System.getProperty("user.dir") + "/pom.xml";
             byte[][] data = encodeTest.encode(inputFilePath);
 
             /** decode test **/

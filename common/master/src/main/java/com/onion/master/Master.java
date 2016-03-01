@@ -86,7 +86,7 @@ public class Master {
         return true;
     }
 
-<<<<<<< HEAD
+
     public boolean read(String inputFile, String recoveredFile) {
 //        Properties property = new Properties();
 //        String configPath;
@@ -106,21 +106,21 @@ public class Master {
             blockIDs[i - 1] = idList.get(i);
         }
         int blockSize = idList.get(0).intValue();
-=======
+
     public boolean read(long blockId, String recoveredFile) {
         //blockId---->>查询得到了blockSize & fileSize
 
         int blockSize = 0;//
->>>>>>> origin/master
+
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {
             try {
-<<<<<<< HEAD
+
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockIDs[i], 0, (long)blockSize);
-=======
+
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockId, 0, blockSize);
->>>>>>> origin/master
+
                 buffer.get(data[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,13 +132,12 @@ public class Master {
         } catch (IOException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
+
         int erasures[] = generateRandomArray(parityWorkerAmount);
         ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
-=======
+
         int erasures[] = generateRandomArray(dataWorkerAmount);
       //  ecHandler.decode(recoveredFile, srcFile.length(), erasures, data);
->>>>>>> origin/master
         return true;
     }
 

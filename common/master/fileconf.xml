@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<configure> 
-  <name>pom.xml</name>  
-  <blockSize>16960</blockSize>  
-  <fileSize>1584</fileSize>  
-  <blockId>107</blockId> 
-</configure>
+<files>
+  <file>
+    <name>pom.xml</name>
+    <blockSize>16960</blockSize>
+    <fileSize>1584</fileSize>
+    <blockId>107</blockId>
+  </file>
+  <file>
+    <name>pom.xml</name>
+    <blockSize>16960</blockSize>
+    <fileSize>1584</fileSize>
+    <blockId>107</blockId>
+  </file>
+</files>

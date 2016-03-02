@@ -91,8 +91,8 @@ public class Master {
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockId, 0, blockSize);
                 buffer.get(data[i]);
             } catch (IOException e) {
-                e.printStackTrace();
-                return false;
+                //  e.printStackTrace();
+                // return false;
             }
         }
         try {

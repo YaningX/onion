@@ -5,6 +5,8 @@
     <wordSize>8</wordSize>
     <packetSize>8</packetSize>
     <erasureCodeType>CauchyGoodRSCoder</erasureCodeType>
+    <fileInfo>/home/sunhonglin/work/onion/common/master/fileconf.xml</fileInfo>
+    <blockIdConf>/home/sunhonglin/work/onion/dist/onion-master/conf/blockID.properties</blockIdConf>
     <InetAddress>
         <address>127.0.0.1:30001</address>
         <address>127.0.0.1:30002</address>
@@ -15,6 +17,5 @@
         <address>127.0.0.1:30007</address>
         <address>127.0.0.1:30008</address>
         <address>127.0.0.1:30009</address>
-        <address>127.0.0.1:30010</address>
     </InetAddress>
 </configure>

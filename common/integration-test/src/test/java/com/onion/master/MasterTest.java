@@ -43,7 +43,7 @@ public class MasterTest {
     @Test
     public void masterWriteAndReadTest() {
         master.write(srcPath);
-        master.read(srcPath, recoverPath);
+        master.read(recoverPath);
     }
 
 }

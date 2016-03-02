@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configure>
-    <dataWorkerAmount>4</dataWorkerAmount>
+    <dataWorkerAmount>6</dataWorkerAmount>
     <parityWorkerAmount>3</parityWorkerAmount>
     <wordSize>8</wordSize>
     <packetSize>8</packetSize>
     <erasureCodeType>CauchyGoodRSCoder</erasureCodeType>
-    <fileInfo></fileInfo>
+    <fileInfo>/home/sunhonglin/work/onion/common/master/fileconf.xml</fileInfo>
+    <blockIdConf>/home/sunhonglin/work/onion/dist/onion-master/conf/blockID.properties</blockIdConf>
     <InetAddress>
         <address>127.0.0.1:30001</address>
         <address>127.0.0.1:30002</address>
@@ -14,12 +15,7 @@
         <address>127.0.0.1:30005</address>
         <address>127.0.0.1:30006</address>
         <address>127.0.0.1:30007</address>
+        <address>127.0.0.1:30008</address>
+        <address>127.0.0.1:30009</address>
     </InetAddress>
-    <files>
-        <file>
-            <blockId>111</blockId>
-            <fileSize>12233</fileSize>
-            <blockSize>233</blockSize>
-        </file>>
-    </files>
 </configure>

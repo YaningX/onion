@@ -55,7 +55,7 @@ public class Master {
                 parityWorkerAmount, coder, wordSize, packetSize);
     }
 
-    public boolean write(String srcPath) {
+    public long write(String srcPath) {
         byte[][] encodeData = ecHandler.encode(srcPath);
         long blockID = generateBlockId();
         MasterBlockWriter writer = new MasterBlockWriter();
@@ -65,7 +65,6 @@ public class Master {
                 writer.write(encodeData[i], 0, encodeData[i].length);
             } catch (IOException e) {
                 e.printStackTrace();
-                return false;
             }
             writer.close();
         }
@@ -76,14 +75,14 @@ public class Master {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return blockID;
     }
 
-    public boolean read(String recoveredFile) {
+    public boolean read(long blockId, String recoveredFile) {
         FileConf fileConf = new FileConf(new File(masterConf.getFileInfo()));
+        fileConf.setFile(blockId);
         long blockSize = fileConf.getBlockSize();
         long fileSize = fileConf.getFileSize();
-        long blockId = fileConf.getBlockId();
         byte[][] data = new byte[dataWorkerAmount + parityWorkerAmount][(int)blockSize];
         MasterBlockReader reader = new MasterBlockReader();
         for (int i = 0; i < dataWorkerAmount + parityWorkerAmount; i++) {

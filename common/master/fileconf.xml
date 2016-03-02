@@ -1,8 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<configure> 
-  <name>pom.xml</name>  
-  <blockSize>16960</blockSize>  
-  <fileSize>1584</fileSize>  
-  <blockId>107</blockId> 
-</configure>
+<files> 
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>108</blockId> 
+  </file>  
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>110</blockId> 
+  </file>  
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>111</blockId> 
+  </file>  
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>112</blockId> 
+  </file>  
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>113</blockId> 
+  </file>  
+  <file> 
+    <name>pom.xml</name>  
+    <blockSize>320</blockSize>  
+    <fileSize>1584</fileSize>  
+    <blockId>114</blockId> 
+  </file>  
+  <file> 
+    <name>conf.xml</name>  
+    <blockSize>128</blockSize>  
+    <fileSize>692</fileSize>  
+    <blockId>115</blockId> 
+  </file>  
+  <file> 
+    <name>conf.xml</name>  
+    <blockSize>128</blockSize>  
+    <fileSize>692</fileSize>  
+    <blockId>116</blockId> 
+  </file>  
+  <file> 
+    <name>conf.xml</name>  
+    <blockSize>128</blockSize>  
+    <fileSize>692</fileSize>  
+    <blockId>117</blockId> 
+  </file>  
+  <file>
+    <name>conf.xml</name>
+    <blockSize>128</blockSize>
+    <fileSize>692</fileSize>
+    <blockId>118</blockId>
+  </file>
+</files>

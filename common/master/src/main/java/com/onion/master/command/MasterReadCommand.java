@@ -27,7 +27,7 @@ public class MasterReadCommand extends MasterCommand {
             System.out.println("Please input correct read command.");
         }
         //the function read has been updated in class Master;
-        boolean result = master.read(inputSet[0]);
+        boolean result = master.read(0,inputSet[0]);
         if (result == false) {
             System.out.println("Read failed.");
         } else {

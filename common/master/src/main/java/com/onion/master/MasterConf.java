@@ -89,4 +89,12 @@ public class MasterConf {
         erasureCodeType = root.element("erasureCodeType").getText();
         return erasureCodeType;
     }
+
+    public String getFileInfo() {
+        return root.element("fileInfo").getText();
+    }
+
+    public String getBlockIdConf() {
+        return root.element("blockIdConf").getText();
+    }
 }

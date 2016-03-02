@@ -21,7 +21,7 @@ public class MasterTest {
 
     @BeforeClass
     public static void step() throws Exception{
-        srcPath = "/home/sunhonglin/work/onion/common/integration-test/pom.xml";
+        srcPath = "/home/sunhonglin/work/onion/common/integration-test/conf.xml";
         recoverPath = "/home/sunhonglin/work/onion/common/integration-test/target/recover_pom.xml";
         masterConfSrc = "/home/sunhonglin/work/onion/common/master/conf.xml";
         master = new Master(new File(masterConfSrc));
@@ -42,8 +42,8 @@ public class MasterTest {
 
     @Test
     public void masterWriteAndReadTest() {
-        master.write(srcPath);
-        master.read(srcPath, recoverPath);
+       long id =  master.write(srcPath);
+        master.read(117, recoverPath);
     }
 
 }

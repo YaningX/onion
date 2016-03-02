@@ -28,5 +28,4 @@ done
 
 java $DEBUG \
 -classpath lib/*:. \
-org.apache.kerby.kerberos.tool.kadmin.KadminTool $args
 com.onion.master.MasterTool $args

@@ -21,9 +21,9 @@ public class MasterTest {
 
     @BeforeClass
     public static void step() throws Exception{
-        srcPath = "/home/sunhonglin/work/onion/common/integration-test/conf.xml";
-        recoverPath = "/home/sunhonglin/work/onion/common/integration-test/target/recover_pom.xml";
-        masterConfSrc = "/home/sunhonglin/work/onion/common/master/conf.xml";
+        srcPath = System.getProperty("user.dir") + "/pom.xml";
+        recoverPath = System.getProperty("user.dir") + "/target/re-pom.xml";
+        masterConfSrc = "/Users/xuyaning/work/onion/common/master/conf.xml";
         master = new Master(new File(masterConfSrc));
         Worker[] workers = new Worker[9];
         for (int i = 0; i < workers.length; i++) {
@@ -43,7 +43,7 @@ public class MasterTest {
     @Test
     public void masterWriteAndReadTest() {
        long id =  master.write(srcPath);
-        master.read(117, recoverPath);
+        master.read((long) 3, recoverPath);
     }
 
 }

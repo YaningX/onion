@@ -26,7 +26,7 @@ import com.sun.jna.Pointer;
 public class VandermondeRSCoder extends AbstractErasureCoder {
     private int[] vandermondMatrix;
 
-    public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize) {
+    public VandermondeRSCoder(int dataBlockNum, int parityBlockNum, int wordSize, int packetSize) {
         super(dataBlockNum, parityBlockNum, wordSize);
         Preconditions.checkArgument(wordSize == 8 || wordSize == 16 ||
                 wordSize == 32, "For Matrix-Based Coding, wordSize must be 8, 16 or 32.");

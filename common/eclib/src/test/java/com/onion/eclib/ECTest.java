@@ -52,7 +52,7 @@ public class ECTest {
             blockSize = ;
             wholeSize = blockSize * k;
         }*/
-        blockSize = (blockSize / (packetSize * wordSize + 1) + 1) * (packetSize * wordSize);
+        blockSize = (blockSize / (packetSize * wordSize) + 1) * (packetSize * wordSize);
         int wholeSize = blockSize * k;
         /**
          *  Read data from a file into a two-dimension array.
@@ -231,7 +231,7 @@ public class ECTest {
 
         System.out.println(System.getProperty("user.dir"));
         File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
-        File oriFile = new File(System.getProperty("user.dir") + "/pom.xml");
+        File oriFile = new File("/Users/xuyaning/Desktop" + "/javaConcurrentAnimated.jar");
         runWith(backupDir, oriFile);
     }
 

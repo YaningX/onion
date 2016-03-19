@@ -55,25 +55,30 @@ public class Master {
                 parityWorkerAmount, coder, wordSize, packetSize);
     }
 
-    public long write(String srcPath) {
+    public long write(String srcPath) throws Exception {
         byte[][] encodeData = ecHandler.encode(srcPath);
         long blockID = generateBlockId();
         MasterBlockWriter writer = new MasterBlockWriter();
+        int count = 0;
         for (int i = 0; i < encodeData.length; i++) {
             try {
                 writer.open(addresses.get(i), blockID, 0);
                 writer.write(encodeData[i], 0, encodeData[i].length);
+                count++;
             } catch (IOException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
             }
             writer.close();
+        }
+        if (count < dataWorkerAmount) {
+            throw new Exception("Only " + count + " worker nodes run !!!");
         }
         String filename = new File(srcPath).getName();
         FileConf fileConf = new FileConf(new File(masterConf.getFileInfo()));
         try {
             fileConf.setFileInfo(filename, encodeData[0].length, new File(srcPath).length(), blockID);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return blockID;
     }
@@ -90,14 +95,14 @@ public class Master {
                 ByteBuffer buffer = reader.readRemoteBlock(addresses.get(i), blockId, 0, blockSize);
                 buffer.get(data[i]);
             } catch (IOException e) {
-                e.printStackTrace();
-                return false;
+                //  e.printStackTrace();
+                // return false;
             }
         }
         try {
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         int erasures[] = generateRandomArray(parityWorkerAmount);
         ecHandler.decode(recoveredFile, fileSize, erasures, data);

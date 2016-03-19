@@ -18,8 +18,6 @@ package com.onion.master;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tachyon.Constants;
 import tachyon.network.protocol.*;
 import tachyon.network.protocol.databuffer.DataByteArrayChannel;
@@ -32,7 +30,6 @@ import java.util.concurrent.TimeUnit;
  * Write data to a worker data server using Netty.
  */
 public final class MasterBlockWriter {
-  private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final Bootstrap mClientBootstrap;
   private final ClientHandler mHandler;
@@ -78,7 +75,6 @@ public final class MasterBlockWriter {
       // TODO(hy): keep connection open across multiple write calls.
       ChannelFuture f = mClientBootstrap.connect(mAddress).sync();
 
-      LOG.info("Connected to remote machine {}", mAddress);
       Channel channel = f.channel();
       mHandler.addListener(listener);
       channel.writeAndFlush(new RPCBlockWriteRequest(mSessionId, mBlockId, mWrittenBytes, length,
@@ -91,7 +87,6 @@ public final class MasterBlockWriter {
         case RPC_BLOCK_WRITE_RESPONSE:
           RPCBlockWriteResponse resp = (RPCBlockWriteResponse) response;
           RPCResponse.Status status = resp.getStatus();
-          LOG.info("status: {} from remote machine {} received", status, mAddress);
 
           if (status != RPCResponse.Status.SUCCESS) {
             throw new IOException( status.getMessage());

@@ -20,7 +20,6 @@
         <module>integration-test</module>
         <module>configure</module>
         <module>db</module>
-        <module>web</module>
     </modules>
 
     <dependencies>

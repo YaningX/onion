@@ -40,9 +40,6 @@ public class MasterTool {
                 + "                         Write a file to onion erasure system\n"
                 + "read, file\n"
                 + "                         Read a file from onion\n"
-                + "delete \n"
-                + "                         Modify principal\n"
-                + "list_files               List all the file.\n"
                 + "quit, exit, q            Exit program.";
 
         private static final String USAGE = ("Usage: sh bin/onion.sh")

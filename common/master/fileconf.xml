@@ -5,60 +5,42 @@
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>108</blockId> 
+    <blockId>0</blockId> 
   </file>  
   <file> 
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>110</blockId> 
+    <blockId>1</blockId> 
   </file>  
   <file> 
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>111</blockId> 
+    <blockId>2</blockId> 
   </file>  
   <file> 
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>112</blockId> 
+    <blockId>3</blockId> 
   </file>  
   <file> 
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>113</blockId> 
+    <blockId>4</blockId> 
   </file>  
   <file> 
     <name>pom.xml</name>  
     <blockSize>320</blockSize>  
     <fileSize>1584</fileSize>  
-    <blockId>114</blockId> 
-  </file>  
-  <file> 
-    <name>conf.xml</name>  
-    <blockSize>128</blockSize>  
-    <fileSize>692</fileSize>  
-    <blockId>115</blockId> 
-  </file>  
-  <file> 
-    <name>conf.xml</name>  
-    <blockSize>128</blockSize>  
-    <fileSize>692</fileSize>  
-    <blockId>116</blockId> 
-  </file>  
-  <file> 
-    <name>conf.xml</name>  
-    <blockSize>128</blockSize>  
-    <fileSize>692</fileSize>  
-    <blockId>117</blockId> 
+    <blockId>5</blockId> 
   </file>  
   <file>
-    <name>conf.xml</name>
-    <blockSize>128</blockSize>
-    <fileSize>692</fileSize>
-    <blockId>118</blockId>
+    <name>pom.xml</name>
+    <blockSize>320</blockSize>
+    <fileSize>1584</fileSize>
+    <blockId>6</blockId>
   </file>
 </files>

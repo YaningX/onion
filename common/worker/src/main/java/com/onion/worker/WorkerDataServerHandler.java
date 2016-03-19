@@ -17,8 +17,6 @@ package com.onion.worker;
 
 import com.google.common.base.Preconditions;
 import io.netty.channel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tachyon.Constants;
 import tachyon.network.protocol.*;
 import tachyon.network.protocol.databuffer.DataBuffer;
@@ -36,7 +34,6 @@ import java.nio.channels.FileChannel;
 
 @ChannelHandler.Sharable
 public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<RPCMessage> {
-    private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
     private File backendDir;
 
     public WorkerDataServerHandler(String backendDir) {
@@ -65,7 +62,6 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOG.warn("Exception thrown while processing request", cause);
         ctx.close();
     }
 
@@ -140,7 +136,6 @@ public final class WorkerDataServerHandler extends SimpleChannelInboundHandler<R
 
         } catch (IOException e) {
             e.printStackTrace();
-            LOG.error("Error writing remote block : {}", e.getMessage(), e);
             RPCBlockWriteResponse resp =
                     RPCBlockWriteResponse.createErrorResponse(req, RPCResponse.Status.WRITE_ERROR);
             ChannelFuture future = ctx.writeAndFlush(resp);

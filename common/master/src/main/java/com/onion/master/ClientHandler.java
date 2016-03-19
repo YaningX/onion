@@ -19,8 +19,6 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tachyon.Constants;
 import tachyon.network.protocol.RPCMessage;
 import tachyon.network.protocol.RPCResponse;
@@ -35,7 +33,6 @@ import java.util.Set;
  */
 @ChannelHandler.Sharable
 public final class ClientHandler extends SimpleChannelInboundHandler<RPCMessage> {
-  private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   /**
    * The interface for listeners to implement to receive callbacks when messages are received.
@@ -89,7 +86,6 @@ public final class ClientHandler extends SimpleChannelInboundHandler<RPCMessage>
 
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    LOG.warn("Exception thrown while processing request", cause);
     ctx.close();
   }
 

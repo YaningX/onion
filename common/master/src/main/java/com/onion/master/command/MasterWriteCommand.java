@@ -29,8 +29,12 @@ public class MasterWriteCommand extends MasterCommand {
         }
 
         try {
-            master.write(inputSet[1]);
+            long time0 = System.currentTimeMillis();
+            long id = master.write(inputSet[1]);
             System.out.println("Write success.");
+            System.out.println("BlockId:   " + id);
+            long time1 = System.currentTimeMillis();
+            System.out.println("Writing time: " + (time1 - time0)+ " milliseconds");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Write failed!");

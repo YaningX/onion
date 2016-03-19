@@ -27,11 +27,19 @@ public class MasterReadCommand extends MasterCommand {
             System.out.println("Please input correct read command.");
         }
         //the function read has been updated in class Master;
-        boolean result = master.read(0,inputSet[0]);
+        try {
+            master.write("conf/conf.xml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long time0 = System.currentTimeMillis();
+        boolean result = master.read(Long.valueOf(inputSet[1]), inputSet[2]);
         if (result == false) {
             System.out.println("Read failed.");
         } else {
             System.out.println("Read success.");
         }
+        long time1 = System.currentTimeMillis();
+        System.out.println("Reading time: " + (time1 - time0) + "  milliseconds");
     }
 }

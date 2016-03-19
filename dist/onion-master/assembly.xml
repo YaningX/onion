@@ -35,7 +35,6 @@
     <fileSet>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>log4j.properties</include>
         <include>README.txt</include>
       </includes>
     </fileSet>

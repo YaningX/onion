@@ -18,8 +18,6 @@ package com.onion.master;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tachyon.Constants;
 import tachyon.client.RemoteBlockReader;
 import tachyon.network.protocol.*;
@@ -33,7 +31,6 @@ import java.util.concurrent.TimeUnit;
  * Read data from from worker data server using Netty.
  */
 public final class MasterBlockReader implements RemoteBlockReader {
-  private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final Bootstrap mClientBootstrap;
   private final ClientHandler mHandler;
@@ -51,7 +48,6 @@ public final class MasterBlockReader implements RemoteBlockReader {
     try {
       ChannelFuture f = mClientBootstrap.connect(address).sync();
 
-      LOG.info("Connected to remote machine {}", address);
       Channel channel = f.channel();
       SingleResponseListener listener = new SingleResponseListener();
       mHandler.addListener(listener);
@@ -63,7 +59,6 @@ public final class MasterBlockReader implements RemoteBlockReader {
       switch (response.getType()) {
         case RPC_BLOCK_READ_RESPONSE:
           RPCBlockReadResponse blockResponse = (RPCBlockReadResponse) response;
-          LOG.info("Data {} from remote machine {} received", blockId, address);
 
           RPCResponse.Status status = blockResponse.getStatus();
           if (status == RPCResponse.Status.SUCCESS) {

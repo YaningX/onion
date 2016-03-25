@@ -9,7 +9,7 @@
     <blockIdConf>conf/blockID.properties</blockIdConf>
     <InetAddress>
         <address>127.0.0.1:30001</address>
-        <address>192.168.1.102:30002</address>
+        <address>127.0.0.1:30002</address>
         <address>127.0.0.1:30003</address>
         <address>127.0.0.1:30004</address>
         <address>127.0.0.1:30005</address>

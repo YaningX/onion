@@ -66,8 +66,7 @@ public class Master {
                 writer.write(encodeData[i], 0, encodeData[i].length);
                 count++;
             } catch (IOException e) {
-                System.out.println("bloack :" + i);
-                e.printStackTrace();
+               // e.printStackTrace();
             }
             writer.close();
         }

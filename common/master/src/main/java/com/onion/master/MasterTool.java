@@ -101,6 +101,7 @@ public class MasterTool {
                 }
 
                 Master master = new Master(getConfDir(args));
+                System.out.println(REQUEST_LIST);
                 Scanner scanner = new Scanner(System.in, "UTF-8");
                 String input = scanner.nextLine();
                 while (!(input.equals("quit") || input.equals("exit")

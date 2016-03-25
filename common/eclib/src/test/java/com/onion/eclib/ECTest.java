@@ -199,7 +199,7 @@ public class ECTest {
         this.m = 3;
         this.wordSize = 8;
         this.packetSize = 8;
-        this.coder = new VandermondeRSCoder(k, m, wordSize);
+        this.coder = new VandermondeRSCoder(k, m, wordSize, 16);
 
         System.out.println(System.getProperty("user.dir"));
         File backupDir = new File(System.getProperty("user.dir") + "/target/backup");
